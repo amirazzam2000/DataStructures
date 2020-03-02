@@ -1,7 +1,4 @@
-import Data.Connection;
-import Data.ConnectionManager;
-import Data.Room;
-import Data.RoomManager;
+import Data.*;
 
 import java.util.Scanner;
 
@@ -45,7 +42,7 @@ public class Main {
         ConnectionManager connections =
                 new ConnectionManager(connections_file);
 
-
+        AdjacencyMatrix graph = new AdjacencyMatrix(connections, rooms);
 
     }
 }

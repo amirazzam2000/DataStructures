@@ -18,4 +18,8 @@ public class RoomManager {
             e.printStackTrace();
         }
     }
+
+    public Room[] getRooms() {
+        return rooms;
+    }
 }

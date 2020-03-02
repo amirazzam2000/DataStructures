@@ -18,4 +18,8 @@ public class ConnectionManager {
             e.printStackTrace();
         }
     }
+
+    public Connection[] getConnections() {
+        return connections;
+    }
 }
