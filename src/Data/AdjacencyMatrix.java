@@ -22,6 +22,9 @@ public class AdjacencyMatrix {
             }
         }
 
+    }
+
+    public void printMatrix (){
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j <matrix[i].length ; j++) {
                 if(matrix[i][j] == Integer.MAX_VALUE)
@@ -31,9 +34,7 @@ public class AdjacencyMatrix {
             }
             System.out.println();
         }
-
     }
-
     public int[][] getMatrix() {
         return matrix;
     }
