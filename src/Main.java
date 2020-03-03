@@ -43,7 +43,6 @@ public class Main {
                 new ConnectionManager(connections_file);
 
         AdjacencyMatrix graph = new AdjacencyMatrix(connections, rooms);
-        graph.printMatrix();
 
     }
 }

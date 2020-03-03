@@ -1,9 +1,11 @@
 package Data;
 
+import java.util.BitSet;
+
 public class AdjacencyMatrix {
     private int[][] matrix;
     public AdjacencyMatrix(ConnectionManager connections, RoomManager rooms){
-        matrix = new int [rooms.getRooms().length][rooms.getRooms().length];
+       matrix = new int [rooms.getRooms().length][rooms.getRooms().length];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j <matrix[i].length ; j++) {
                 matrix[i][j] = Integer.MAX_VALUE;
@@ -21,7 +23,6 @@ public class AdjacencyMatrix {
                 }
             }
         }
-
     }
 
     public void printMatrix (){
@@ -35,7 +36,8 @@ public class AdjacencyMatrix {
             System.out.println();
         }
     }
-    public int[][] getMatrix() {
-        return matrix;
+
+    public int getConnection(int x ,int y){
+        return matrix[x][y];
     }
 }
