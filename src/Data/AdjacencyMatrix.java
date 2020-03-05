@@ -41,16 +41,16 @@ public class AdjacencyMatrix {
                         if(listImplementation.get(c.getRoom_connected()[i]) == null){
                             listImplementation.put(c.getRoom_connected()[i],
                                     new HashMap<>());
-                            listImplementation.get(c.getRoom_connected()[i]).put(c.getRoom_connected()[j], c.getEnemy_probability());
+                            listImplementation.get(c.getRoom_connected()[i]).put(c.getRoom_connected()[j], 100 - c.getEnemy_probability());
                         }
                         else{
                             Integer aux =
                                     listImplementation.get(c.getRoom_connected()[i]).get(c.getRoom_connected()[j]);
                             if (aux == null ){
-                                listImplementation.get(c.getRoom_connected()[i]).put(c.getRoom_connected()[j], c.getEnemy_probability());
+                                listImplementation.get(c.getRoom_connected()[i]).put(c.getRoom_connected()[j],100 - c.getEnemy_probability());
                             }
-                            else if(aux > c.getEnemy_probability()){
-                                listImplementation.get(c.getRoom_connected()[i]).put(c.getRoom_connected()[j], c.getEnemy_probability());
+                            else if(aux > (100 - c.getEnemy_probability())){
+                                listImplementation.get(c.getRoom_connected()[i]).put(c.getRoom_connected()[j],100- c.getEnemy_probability());
                             }
                         }
 
@@ -69,26 +69,29 @@ public class AdjacencyMatrix {
                 }
             }
         }
-        System.out.println();
     }
 
 
     //TODO : change in case of change
     public int getConnection(int x ,int y){
-        return matrix[x][y];
+        //return matrix[x][y];
+        return listImplementation.get(x).get(y);
     }
 
     //TODO : change in case of change
     public int getSize(){
-        return matrix.length;
+        //return matrix.length;
+        return listImplementation.size();
     }
 
     //TODO : change in case of change
     public int[] getAdjacentNodes(int current) {
-        int[] adjacentNodes = new int[getSize()];
+        //int[] adjacentNodes = new int[getSize()];
+        int[] adjacentNodes =
+                new int[listImplementation.get(current).size()];
         int i = 0;
 
-        for (int j = 0; j < getSize(); j++) {
+        /*for (int j = 0; j < getSize(); j++) {
             if (matrix[current][j] != Integer.MAX_VALUE) {
                 adjacentNodes[i++] = j;
             }
@@ -96,7 +99,14 @@ public class AdjacencyMatrix {
         int[] finalAdj = new int[i];
         for (int j = 0; j < i; j++) {
             finalAdj[j] = adjacentNodes[j];
+        }*/
+
+        for (Integer key: listImplementation.get(current).keySet()) {
+            adjacentNodes[i++] = key;
         }
-        return finalAdj;
+
+
+
+        return adjacentNodes;
     }
 }

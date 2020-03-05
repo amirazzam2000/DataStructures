@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "connection_name": "Connection1",
+    "room_connected": [
+      0,
+      1
+    ],
+    "enemy_probability": 75
+  },
+  {
+    "id": 1,
+    "connection_name": "Connection2",
+    "room_connected": [
+      1,
+      2
+    ],
+    "enemy_probability": 30
+  }
+]

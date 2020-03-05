@@ -31,6 +31,12 @@ public class Main {
                     connections_file = "data/ConnectionM.json";
                     System.out.println("loading the medium files...");
                     break;
+                case "T":
+                case "t":
+                    rooms_file = "data/RoomT.json";
+                    connections_file = "data/ConnectionT.json";
+                    System.out.println("loading the test files...");
+                    break;
                 default:
                     skip = false ;
                     System.out.println("pick S, L, or M only !");
