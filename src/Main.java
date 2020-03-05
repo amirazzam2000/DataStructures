@@ -44,5 +44,18 @@ public class Main {
 
         AdjacencyMatrix graph = new AdjacencyMatrix(connections, rooms);
 
+        Dijkstra dijkstra = new Dijkstra(graph);
+
+        int start, end;
+        System.out.println("enter your starting point (only numbers): ");
+        start = sc.nextInt();
+
+        System.out.println("enter your ending point (only numbers): ");
+        end = sc.nextInt();
+
+        dijkstra.shortestPath(start, end);
+
+
+
     }
 }
