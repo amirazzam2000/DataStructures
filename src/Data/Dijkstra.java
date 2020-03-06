@@ -3,8 +3,8 @@ package Data;
 public class Dijkstra {
     private AdjacencyMatrix graph;
     private int[] walk;
-    private float[] distance;
-    private float[] notFindingAnEnemy;
+    private double[] distance;
+    private double[] notFindingAnEnemy;
     private char[] visited;
     private int[] finalWalk;
     private int counter;
@@ -13,9 +13,9 @@ public class Dijkstra {
         this.graph = graph;
         walk = new int[graph.getSize()];
         finalWalk = new int[graph.getSize()];
-        distance = new float[graph.getSize()];
+        distance = new double[graph.getSize()];
         visited = new char[graph.getSize()];
-        notFindingAnEnemy = new float[graph.getSize()];
+        notFindingAnEnemy = new double[graph.getSize()];
 
         for (int i = 0; i <walk.length; i++) {
             walk[i] = Integer.MAX_VALUE;
@@ -37,15 +37,16 @@ public class Dijkstra {
         while( thereAreMoreNodesToVisit(walk) && visited[end] == 'f'){
             for (int adj: graph.getAdjacentNodes(current)) {
                 if(visited[adj] == 'f'){
-                    /*float aux1 =
+                    double aux1 =
                             notFindingAnEnemy[current] * graph.getConnection(current
                             ,adj)/100;
-                    float aux = 1 - aux1;*/
-                    float aux = distance[current] + graph.getConnection(current
-                            , adj);
+                    double aux = 1 - aux1;
+                    /*float aux =
+                            distance[current] +(100 - graph.getConnection(current
+                            , adj));*/
                     if(distance[adj] > aux){
                         distance[adj] = aux;
-                        //notFindingAnEnemy[adj] = aux1;
+                        notFindingAnEnemy[adj] = aux1;
                         walk[adj] = current;
                     }
                 }
@@ -75,9 +76,9 @@ public class Dijkstra {
         finalWalk[counter++] = end;
     }
 
-    private int getMinimum(float[] distance, char[] visited) {
+    private int getMinimum(double[] distance, char[] visited) {
         int pos = -1;
-        float minDis = Integer.MAX_VALUE;
+        double minDis = Integer.MAX_VALUE;
         for (int i = 0; i < distance.length ; i++) {
             if(visited[i] == 'f'){
                 if(distance[i] < minDis){
