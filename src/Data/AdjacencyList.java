@@ -3,7 +3,7 @@ package Data;
 import java.util.BitSet;
 import java.util.HashMap;
 
-public class AdjacencyMatrix {
+public class AdjacencyList {
 
     // this attribute will represent the Adjacency matrix as each key of the
     // first hash map will represent a room and each one of these room will
@@ -11,8 +11,8 @@ public class AdjacencyMatrix {
     // there
     private HashMap<Integer,HashMap<Integer, Integer>> listImplementation;
 
-    public AdjacencyMatrix(ConnectionManager connections,
-                           RoomManager rooms){
+    public AdjacencyList(ConnectionManager connections,
+                         RoomManager rooms){
         listImplementation = new HashMap<>();
 
         for (Connection c: connections.getConnections()) {         // scanning all the connections in the connections json file

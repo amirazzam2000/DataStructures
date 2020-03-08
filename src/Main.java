@@ -48,7 +48,7 @@ public class Main {
         ConnectionManager connections =
                 new ConnectionManager(connections_file);
 
-        AdjacencyMatrix graph = new AdjacencyMatrix(connections, rooms);
+        AdjacencyList graph = new AdjacencyList(connections, rooms);
         Dijkstra dijkstra = new Dijkstra(graph);
 
         int start, end;

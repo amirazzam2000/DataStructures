@@ -1,7 +1,7 @@
 package Data;
 
 public class Dijkstra {
-    private AdjacencyMatrix graph;
+    private AdjacencyList graph;
     private int[] walk;
     private double[] distance;
     private double[] notFindingAnEnemy;
@@ -9,7 +9,7 @@ public class Dijkstra {
     private int[] finalWalk;
     private int counter;
 
-    public Dijkstra(AdjacencyMatrix graph) {
+    public Dijkstra(AdjacencyList graph) {
         this.graph = graph;
         walk = new int[graph.getSize()];
         finalWalk = new int[graph.getSize()];
@@ -41,9 +41,7 @@ public class Dijkstra {
                             notFindingAnEnemy[current] * graph.getConnection(current
                             ,adj)/100;
                     double aux = 1 - aux1;
-                    /*float aux =
-                            distance[current] +(100 - graph.getConnection(current
-                            , adj));*/
+
                     if(distance[adj] > aux){
                         distance[adj] = aux;
                         notFindingAnEnemy[adj] = aux1;
