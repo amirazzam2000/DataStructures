@@ -9,11 +9,12 @@ public class AdjacencyList {
     // first hash map will represent a room and each one of these room will
     // store a hash map of it's adjacent room with the probability of getting
     // there
-    private HashMap<Integer,HashMap<Integer, Integer>> listImplementation;
+    //private HashMap<Integer,HashMap<Integer, Integer>> listImplementation;
 
+    private RoomsList[] listImplementation;
     public AdjacencyList(ConnectionManager connections,
                          RoomManager rooms){
-        listImplementation = new HashMap<>();
+        listImplementation = new RoomsList[rooms.getRooms().length];
 
         for (Connection c: connections.getConnections()) {         // scanning all the connections in the connections json file
 
@@ -23,10 +24,10 @@ public class AdjacencyList {
 
                         // if the room is not in the map then add it to the
                         // map with its probability
-                        if(listImplementation.get(c.getRoom_connected()[i]) == null){
-                            listImplementation.put(c.getRoom_connected()[i],
-                                    new HashMap<>());
-                            listImplementation.get(c.getRoom_connected()[i]).put(
+                        if(listImplementation[c.getRoom_connected()[i]] == null){
+                            listImplementation[c.getRoom_connected()[i]] =
+                                    new RoomsList();
+                            listImplementation[c.getRoom_connected()[i]].add(
                                     c.getRoom_connected()[j], 100 -
                                             c.getEnemy_probability());
                         }
@@ -36,16 +37,16 @@ public class AdjacencyList {
                             // it's less then replace the current probability
                             // with that probability
                             Integer aux =
-                                    listImplementation.get(
-                                            c.getRoom_connected()[i]).get(
+                                    listImplementation[
+                                            c.getRoom_connected()[i]].get(
                                                     c.getRoom_connected()[j]);
                             if (aux == null ){
-                                listImplementation.get(c.getRoom_connected()[i]).put(
+                                listImplementation[c.getRoom_connected()[i]].add(
                                         c.getRoom_connected()[j],100 -
                                                 c.getEnemy_probability());
                             }
                             else if(aux > (100 - c.getEnemy_probability())){
-                                listImplementation.get(c.getRoom_connected()[i]).put(
+                                listImplementation[c.getRoom_connected()[i]].add(
                                         c.getRoom_connected()[j],100 -
                                                 c.getEnemy_probability());
                             }
@@ -58,18 +59,18 @@ public class AdjacencyList {
 
 
     public int getConnection(int x ,int y){
-        return listImplementation.get(x).get(y);
+        return listImplementation[x].get(y);
     }
 
     public int getSize(){
-        return listImplementation.size();
+        return listImplementation.length;
     }
 
     public int[] getAdjacentNodes(int current) {
         int[] adjacentNodes =
-                new int[listImplementation.get(current).size()];
+                new int[listImplementation[current].size()];
         int i = 0;
-        for (Integer key: listImplementation.get(current).keySet()) {
+        for (Integer key: listImplementation[current].keySet()) {
             adjacentNodes[i++] = key;
         }
         return adjacentNodes;
