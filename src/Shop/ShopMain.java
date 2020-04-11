@@ -10,5 +10,6 @@ public class ShopMain {
         ShopObjectManager sm = new ShopObjectManager(shopfile);
 
         ShopObject[] items = sm.getShopObjects();
+
     }
 }
