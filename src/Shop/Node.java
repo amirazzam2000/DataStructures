@@ -25,5 +25,20 @@ class Node {
         }
     }
 
+    public boolean isRoot() {
+        return isRoot;
+    }
+
+    public boolean isFull(){
+        for (int i = 0; i < MAX_ORDER; i++) {
+            if(items[i] == null){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 }
 
