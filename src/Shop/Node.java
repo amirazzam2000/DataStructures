@@ -6,6 +6,8 @@ class Node {
 
     public ShopObject[] items = new ShopObject[MAX_ORDER];
 
+    public int order;
+
     public Node leftChild;
     public Node middleChild;
     public Node rightChild;
@@ -20,6 +22,8 @@ class Node {
 
         this.isRoot = isRoot;
 
+        this.order =0;
+
         for (int i = 0; i < MAX_ORDER-1; i++) {
             items[i] = null;
         }
@@ -30,15 +34,12 @@ class Node {
     }
 
     public boolean isFull(){
-        for (int i = 0; i < MAX_ORDER; i++) {
-            if(items[i] == null){
-                return false;
-            }
-        }
-        return true;
+        return order >= 3;
     }
 
 
-
+    public boolean isLeaf() {
+        return leftChild == null && middleChild == null && rightChild == null;
+    }
 }
 
