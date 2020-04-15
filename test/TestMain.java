@@ -1,4 +1,6 @@
+import MapObjects.MapObject;
 import MapObjects.ObjectManger;
+import MapObjects.RTree;
 
 public class TestMain {
     public static void main(String[] args) {
@@ -6,6 +8,10 @@ public class TestMain {
 
         objects.addCenters();
 
-        System.out.println(objects.getObjects()[0].getId());
+        RTree rTree = new RTree(3);
+
+        for (MapObject object: objects.getObjects()) {
+            rTree.addObject(object);
+        }
     }
 }

@@ -44,4 +44,7 @@ public class Branch extends Rectangle {
     }
 
 
+    public void deleteNode() {
+        child = null;
+    }
 }

@@ -10,7 +10,7 @@ public class Node {
 
     public Node( int order){
         MAX_ORDER = order;
-        MIN_ORDER = (int)Math.ceil((double) MAX_ORDER/2);
+        MIN_ORDER = (int)Math.ceil((double) MAX_ORDER * 0.3);
         children = new Rectangle[MAX_ORDER];
     }
 
@@ -45,9 +45,9 @@ public class Node {
      * @return if the rectangle is added successfully
      */
     public boolean addChild(Rectangle r){
-        for (Rectangle rectangle: children) {
-            if(rectangle == null){
-                rectangle = r;
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] == null) {
+                children[i] = r;
                 return true;
             }
         }
@@ -58,7 +58,13 @@ public class Node {
      * @return if the current Node is a leaf or not
      */
     public boolean isLeaf(){
-        return children instanceof MapObject[];
+
+        for (Rectangle child: children) {
+            if (child instanceof MapObject)
+                return true;
+        }
+
+        return false;
     }
 
     /**
@@ -95,6 +101,41 @@ public class Node {
         return true;
     }
 
+    /**
+     * gets which {@link Rectangle} is the closest to the given {@link Rectangle}
+     * @param object the rectangle we are interested in knowing it's closest
+     *               {@link Rectangle} from this {@link Node}
+     * @return the number of the {@link Rectangle} from this {@link Node}
+     *              closest to the <b><i>object</i><b/>
+     */
+    public int minDistanceFromBranches(Rectangle object){
+        int minDistance = Integer.MAX_VALUE;
+        int pos = -1;
+        for (int i = 0; i < children.length; i++) {
+            if (children[i]!= null) {
+                if (object.getDistance(children[i]) < minDistance) {
+                    minDistance = object.getDistance(children[i]);
+                    pos = i;
+                }
+            }
+        }
+        return pos;
+    }
+
+    public void deleteAllChildren (){
+        for (int i = 0; i < children.length; i++) {
+            children[i] = null;
+        }
+    }
+
+    public void deleteBranch(Rectangle child){
+        for (int i = 0; i < this.children.length; i++) {
+            if (children[i] == child){
+                children[i] = null;
+                break;
+            }
+        }
+    }
 
 
 }

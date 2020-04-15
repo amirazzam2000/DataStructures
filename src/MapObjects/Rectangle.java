@@ -162,4 +162,10 @@ public class Rectangle {
         return farObjects;
     }
 
+    /**
+     * @return if the current Rectangle is a leaf or not
+     */
+    public boolean isLeaf(){
+        return this instanceof MapObject;
+    }
 }
