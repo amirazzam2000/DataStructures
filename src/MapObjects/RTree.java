@@ -38,7 +38,7 @@ public class RTree {
 
         /* if the root is not a leaf */
         if (root.getChild().getChild(0) != null && !root.getChild().isLeaf()){
-
+            root.resize();
             currentNode = (Branch) root.getChild().getChild(i);
             fatherNode = (Branch) root;
             grandFatherNode = (Branch) root;
@@ -50,7 +50,7 @@ public class RTree {
 
             /* while the node is not a leaf */
             while (!currentNode.getChild().getChild(i).isLeaf()) {
-
+                currentNode.resize();
                 /* go deeper in the tree finding the closest leaf Node to the
                 MapObject */
                 if (fatherNode != root){
@@ -110,7 +110,11 @@ public class RTree {
                 }
 
                 fatherNode.getChild().addChild(auxBranches[0]);
-                fatherNode.getChild().addChild(auxBranches[1]);
+                fatherNode.resize();
+
+                if(!fatherNode.getChild().addChild(auxBranches[1])){
+                    insertBranch(fatherNode, grandFatherNode, auxBranches[1]);
+                }
                 fatherNode.resize();
 
             }
@@ -166,6 +170,67 @@ public class RTree {
 
         return true;
     }
+
+    private void insertBranch(Branch currentNode, Branch fatherNode,
+                              Branch branchToBeAdded) {
+
+        /*add all leafs to an array so you can distribute them */
+        Rectangle[] brokenItems = new Rectangle[Node.MAX_ORDER + 1];
+        brokenItems[0] = branchToBeAdded;
+
+        int j = 1;
+        for (Rectangle child: currentNode.getChild().getChildren()) {
+            brokenItems[j++] = child; // adding MapObjects to the array
+        }
+
+        if(currentNode != root){
+                /* delete all the information in the Node and then delete the
+                 node */
+            fatherNode.getChild().deleteBranch(currentNode);
+
+        }
+        else{
+                /* delete all the information in the Node */
+            currentNode.getChild().deleteAllChildren();
+
+        }
+
+
+        Rectangle[] aux = new Rectangle[2];
+        Branch[] auxBranches = new Branch[2];
+
+        aux = Rectangle.findFarAwayNode(brokenItems);
+        auxBranches[0] = new Branch(new Node(), aux[0].getX1(),
+                aux[0].getY1(),aux[0].getX2(),aux[0].getY2());
+        auxBranches[0].getChild().addChild(aux[0]);
+
+        auxBranches[1] = new Branch(new Node(), aux[1].getX1(),
+                aux[1].getY1(),aux[1].getX2(),aux[1].getY2());
+        auxBranches[1].getChild().addChild(aux[1]);
+
+        for (Rectangle left: (brokenItems)) {
+            if (left != aux[0] && left != aux[1]){
+                if (left.getDistance(auxBranches[0]) > left.getDistance(auxBranches[1])){
+                    auxBranches[1].getChild().addChild(left);
+                    auxBranches[1].resize();
+                }
+                else{
+                    auxBranches[0].getChild().addChild(left);
+                    auxBranches[0].resize();
+                }
+            }
+        }
+
+        fatherNode.getChild().addChild(auxBranches[0]);
+        fatherNode.resize();
+
+        if (fatherNode.getChild().addChild(auxBranches[1])){
+            insertBranch(fatherNode,fatherNode,auxBranches[1]);
+        }
+        fatherNode.resize();
+
+    }
+
 
 
 }
