@@ -1,12 +1,14 @@
 package Shop;
 
+import java.awt.*;
+
 public class BTree {
     public static Node root;
 
     //We would initialize the root, and this is the only attribute the tree would have
 
     public BTree(Node root){
-
+        this.root = new Node(true);
     }
 
     public void addItem(ShopObject item){
