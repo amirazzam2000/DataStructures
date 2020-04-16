@@ -2,10 +2,11 @@ package MapObjects;
 
 public class Branch extends Rectangle {
     private Node child;
-    private static int ID = 0;
+    private static  int ID = 0;
 
-    public Branch(Node child, int x1, int y1, int x2, int y2) {
-        super(ID++, x1, y1, x2, y2);
+    public Branch(Node child, Branch fatherNode,int x1, int y1, int x2,
+                  int y2) {
+        super(fatherNode,ID++, x1, y1, x2, y2);
         super.addCenter();
         this.child = child;
     }
