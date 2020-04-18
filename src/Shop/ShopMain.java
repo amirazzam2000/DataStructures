@@ -14,6 +14,11 @@ public class ShopMain {
 
         tree.addItem(items[0]);
         tree.addItem(items[1]);
+        tree.addItem(items[2]);
+        tree.addItem(items[3]);
+        tree.addItem(items[4]);
+
+        System.out.println(BTree.root);
 
         System.out.println("a");
     }

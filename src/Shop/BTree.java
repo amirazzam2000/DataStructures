@@ -14,6 +14,40 @@ public class BTree {
 
     public void addItem(ShopObject item){
         insertObject(root, item);
+
+        if(root.isFull()){
+            //split root
+            ShopObject middle = root.items[root.items.length/2];
+
+            Node newRoot = new Node(middle);
+
+            Node left = new Node();
+            Node right = new Node();
+
+            for (int i = 0; i < root.children.length; i++) {
+                if (i < (root.items.length / 2)) {
+                    left.children[i] = root.children[i];
+                }else{
+                    right.children[i - (root.items.length / 2)] = root.children[i];
+                }
+            }
+
+            for (int i = 0; i < root.items.length-1; i++) {
+
+                if(i <=(root.items.length/2)-1 ){
+                    left.items[i] = root.items[i];
+                }
+                else{
+                    right.items[i-(root.items.length/2)] = root.items[i+1];
+                }
+            }
+
+            newRoot.children[0] = left;
+            newRoot.children[1] = right;
+
+            root = newRoot;
+            root.isLeaf = false;
+        }
     }
 
     private void insertObject(Node currentNode, ShopObject item) {
@@ -24,32 +58,7 @@ public class BTree {
 
         if(currentNode.isLeaf()){
             //we check where this value should be inserted and insert it
-
-            //if no item there
-            if(currentNode.items[0] == null){
-                currentNode.items[0] = item;
-
-            //if items already there
-            } else{
-
-                for (int i = 0; i < currentNode.items.length; i++) {
-
-                    if(currentNode.items[i] == null){
-                        currentNode.items[i] = item;
-                        break;
-                    } else if(currentNode.items[i].getPrice() > item.getPrice()){
-
-                        //shift all other items
-                        for (int j = currentNode.items.length-2; j >= i; j--) {
-                            currentNode.items[j+1] = currentNode.items[j];
-                        }
-                        //insert item into i+1 (where we started shifting the items)
-                        currentNode.items[i] = item;
-                        break;
-                    }
-
-                }
-            }
+            addItemIntoNode(currentNode, item);
 
         } else{
             Node next = currentNode.children[0];
@@ -70,102 +79,66 @@ public class BTree {
             // check child if full.
             if(currentNode.children[childPos].isFull()){
                 // if yes, split child into 2 and recib middle value
+                ShopObject middle = currentNode.children[childPos].items[currentNode.items.length/2];
 
-            }
-        }
+                int index = addItemIntoNode(currentNode, middle);
 
-        if(currentNode.isFull()){
-            //1) get middle
-            ShopObject middle = currentNode.items[currentNode.items.length/2];
+                Node left = new Node();
+                Node right = new Node();
 
-            if(root == currentNode){
-
-                Node newRoot = new Node();
-                Node newLeftChild = new Node();
-                Node newRightChild = new Node();
-                newRoot.items[0] = middle;
+                for (int i = 0; i < currentNode.children.length; i++) {
+                    if (i < (currentNode.items.length / 2)) {
+                        left.children[i] = currentNode.children[i];
+                    }else{
+                        right.children[i - (currentNode.items.length / 2)] = currentNode.children[i];
+                    }
+                }
 
                 for (int i = 0; i < currentNode.items.length-1; i++) {
 
                     if(i <=(currentNode.items.length/2)-1 ){
-                        newLeftChild.items[i] = currentNode.items[i];
+                        left.items[i] = currentNode.items[i];
                     }
                     else{
-                        newRightChild.items[currentNode.items.length-i+1] = currentNode.items[i];
+                        right.items[i-(root.items.length/2)] = root.items[i+1];
                     }
-
                 }
 
-                currentNode = newRoot;
-
+                currentNode.children[index] = left;
+                currentNode.children[index+1] = right;
             }
-
-            else{
-
-                Node newLeftChild = new Node();
-                Node newRightChild = new Node();
-
-                for (int i = 0; i < currentNode.items.length-1; i++) {
-
-                    if(i <=(currentNode.items.length/2)-1 ){
-                        newLeftChild.items[i] = currentNode.items[i];
-                    }
-                    else{
-                        newRightChild.items[currentNode.items.length-i+1] = currentNode.items[i];
-                    }
-
-                }
-
-
-            }
-
-
-
-            //3) point pointers to children yes
-
-        // once we come back up, we reorder the values based on where we inserted the value (on the int j, check the princeton code, you understood (Felipe))
-        // ++ to the order of the current node
-        // if the node is now full, break it
-
-
         }
-
-
-        // keep going baby
     }
 
-    private void organizeTree(Node currentNode){
+    private int addItemIntoNode(Node node, ShopObject item){
 
-        /*
+        //if no item there
+        if(node.items[0] == null){
+            node.items[0] = item;
+            return 0;
 
-        //need recursion
+        //if items already there
+        } else{
+            int index = 1;
+            for (int i = 0; i < node.items.length; i++) {
 
-        //base case
-        if(isLeaf()){
-            if(currentNode.isFull()){
-                //pull up middle boi into parent node
-            }
-        }
-        //recursive case
-        else{
-            if(currentNode.isFull()){
+                if(node.items[i] == null){
+                    node.items[i] = item;
+                    return i;
 
-                if(currentNode.isRoot()){
+                } else if(node.items[i].getPrice() > item.getPrice()){
 
-                    //create new node, pull up middle boi into new node, organize children blah blah blah
-
+                    //shift all other items
+                    for (int j = node.items.length-2; j >= i; j--) {
+                        node.items[j+1] = node.items[j];
+                    }
+                    //insert item into i+1 (where we started shifting the items)
+                    node.items[i] = item;
+                    return i;
                 }
-                else{
-
-                    //pull up middle boi into parent node
-
-                }
             }
-            else{
-                organizeTree(childNode);
-            }
+            return index;
         }
-        */
     }
 
     private void deleteNode(){

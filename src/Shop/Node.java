@@ -21,10 +21,25 @@ class Node {
         }
     }
 
-    public boolean isFull(){
-        return items[MAX_ORDER-1] == null;
+    public Node(ShopObject item){
+        Arrays.fill(children, null);
+
+        items[0] = item;
+
+        for (int i = 1; i < MAX_ORDER-1; i++) {
+            items[i] = null;
+        }
     }
 
+    public boolean isFull(){
+        return items[MAX_ORDER-1] != null;
+    }
+
+    public void makeLeftChild(ShopObject[] items, Node[] children){
+        for (int i = 0; i < items.length; i++) {
+            this.items[i] = items[i];
+        }
+    }
 
     public boolean isLeaf() {
         return this.isLeaf;
