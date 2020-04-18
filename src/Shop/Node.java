@@ -8,7 +8,7 @@ class Node {
 
     public ShopObject[] items = new ShopObject[MAX_ORDER];
 
-    public Node[] children = new Node[MAX_ORDER];
+    public Node[] children = new Node[MAX_ORDER+1];
 
     public boolean isLeaf = true;
 

@@ -53,23 +53,28 @@ public class BTree {
 
         } else{
             Node next = currentNode.children[0];
-
+            int childPos =0;
             //check where we should go down
             for (int i = 0; i < currentNode.items.length; i++) {
                 if(currentNode.items[i] == null){
                     next = currentNode.children[i];
+                    childPos =i;
                     break;
                 }else if(item.getPrice() < currentNode.items[i].getPrice()){
                     next = currentNode.children[i];
+                    childPos =i;
                 }
             }
-
             insertObject(next, item);
+
+            // check child if full.
+            if(currentNode.children[childPos].isFull()){
+                // if yes, split child into 2 and recib middle value
+
+            }
         }
 
-        // once we come back up, we reorder the values based on where we inserted the value (on the int j, check the princeton code, you understood (Felipe))
-        // ++ to the order of the current node
-        // if the node is now full, break it
+        // keep going baby
     }
 
     private void organizeTree(Node currentNode){
