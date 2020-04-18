@@ -16,14 +16,24 @@ public class Rectangle {
     private int y2;
     private int centerX;
     private int centerY;
+    private Branch fatherNode;
 
-    public Rectangle(int id, int x1, int y1, int x2, int y2) {
+    public Rectangle(Branch fatherNode,int id, int x1, int y1, int x2, int y2) {
         this.id = id;
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
         addCenter();
+        this.fatherNode = fatherNode;
+    }
+
+    public Branch getFatherNode() {
+        return fatherNode;
+    }
+
+    public void setFatherNode(Branch fatherNode) {
+        this.fatherNode = fatherNode;
     }
 
     public int getCenterX() {

@@ -6,7 +6,8 @@ public class RTree {
     private Branch root;
 
     public RTree(int order) {
-        this.root = new Branch(new Node(order),0,0,0,0);
+        this.root = new Branch(new Node(order),null,0,0,0,0);
+
     }
 
 
@@ -30,18 +31,14 @@ public class RTree {
     * */
     public boolean addObject(MapObject object) {
         Branch currentNode = null;
-        Branch fatherNode = null;
-        Branch grandFatherNode = null;
         int i = root.getChild().minDistanceFromBranches(object);
         int p = i;
         int g = p;
 
         /* if the root is not a leaf */
         if (root.getChild().getChild(0) != null && !root.getChild().isLeaf()){
-
+            root.resize();
             currentNode = (Branch) root.getChild().getChild(i);
-            fatherNode = (Branch) root;
-            grandFatherNode = (Branch) root;
             /* get the closest rectangle in the current branch to the MapObject
               we are trying to add */
             g = p;
@@ -50,14 +47,10 @@ public class RTree {
 
             /* while the node is not a leaf */
             while (!currentNode.getChild().getChild(i).isLeaf()) {
-
+                currentNode.resize();
                 /* go deeper in the tree finding the closest leaf Node to the
                 MapObject */
-                if (fatherNode != root){
-                    grandFatherNode =
-                            (Branch) grandFatherNode.getChild().getChild(g);
-                }
-                fatherNode = (Branch) fatherNode.getChild().getChild(p);
+
                 currentNode = (Branch) currentNode.getChild().getChild(i);
                 g=p;
                 p=i;
@@ -80,6 +73,10 @@ public class RTree {
 
                 /* delete all the information in the Node and then delete the
                  node */
+                Branch fatherNode = currentNode.getFatherNode();
+                if (currentNode.getFatherNode() == null)
+                    fatherNode = root;
+
                 fatherNode.getChild().deleteBranch(currentNode);
                 //currentNode.getChild().deleteAllChildren();
                 //currentNode.deleteNode();
@@ -88,29 +85,37 @@ public class RTree {
                 Branch[] auxBranches = new Branch[2];
 
                 aux = Rectangle.findFarAwayNode(brokenItems);
-                auxBranches[0] = new Branch(new Node(), aux[0].getX1(),
+                auxBranches[0] = new Branch(new Node(),fatherNode, aux[0].getX1(),
                         aux[0].getY1(),aux[0].getX2(),aux[0].getY2());
                 auxBranches[0].getChild().addChild(aux[0]);
+                aux[0].setFatherNode(auxBranches[0]);
 
-                auxBranches[1] = new Branch(new Node(), aux[1].getX1(),
+                auxBranches[1] = new Branch(new Node(),fatherNode, aux[1].getX1(),
                         aux[1].getY1(),aux[1].getX2(),aux[1].getY2());
                 auxBranches[1].getChild().addChild(aux[1]);
+                aux[1].setFatherNode(auxBranches[1]);
 
                 for (Rectangle left: (brokenItems)) {
                     if (left != aux[0] && left != aux[1]){
                         if (left.getDistance(auxBranches[0]) > left.getDistance(auxBranches[1])){
                             auxBranches[1].getChild().addChild(left);
                             auxBranches[1].resize();
+                            auxBranches[1].getChild().getChild(left).setFatherNode(auxBranches[1]);
                         }
                         else{
                             auxBranches[0].getChild().addChild(left);
                             auxBranches[0].resize();
+                            auxBranches[0].getChild().getChild(left).setFatherNode(auxBranches[0]);
                         }
                     }
                 }
 
                 fatherNode.getChild().addChild(auxBranches[0]);
-                fatherNode.getChild().addChild(auxBranches[1]);
+                fatherNode.resize();
+
+                if(!fatherNode.getChild().addChild(auxBranches[1])){
+                    insertBranch(fatherNode, auxBranches[1]);
+                }
                 fatherNode.resize();
 
             }
@@ -134,25 +139,28 @@ public class RTree {
 
                 Rectangle[] aux = new Rectangle[2];
                 Branch[] auxBranches = new Branch[2];
-
                 aux = Rectangle.findFarAwayNode(brokenItems);
-                auxBranches[0] = new Branch(new Node(), aux[0].getX1(),
+                auxBranches[0] = new Branch(new Node(),root, aux[0].getX1(),
                         aux[0].getY1(),aux[0].getX2(),aux[0].getY2());
                 auxBranches[0].getChild().addChild(aux[0]);
+                aux[0].setFatherNode(auxBranches[0]);
 
-                auxBranches[1] = new Branch(new Node(), aux[1].getX1(),
+                auxBranches[1] = new Branch(new Node(),root, aux[1].getX1(),
                         aux[1].getY1(),aux[1].getX2(),aux[1].getY2());
                 auxBranches[1].getChild().addChild(aux[1]);
+                aux[1].setFatherNode(auxBranches[1]);
 
                 for (Rectangle left: (brokenItems)) {
                     if (left != aux[0] && left != aux[1]){
                         if (left.getDistance(auxBranches[0]) > left.getDistance(auxBranches[1])){
                             auxBranches[1].getChild().addChild(left);
                             auxBranches[1].resize();
+                            auxBranches[1].getChild().getChild(left).setFatherNode(auxBranches[1]);
                         }
                         else{
                             auxBranches[0].getChild().addChild(left);
                             auxBranches[0].resize();
+                            auxBranches[0].getChild().getChild(left).setFatherNode(auxBranches[0]);
                         }
                     }
                 }
@@ -166,6 +174,77 @@ public class RTree {
 
         return true;
     }
+
+    private void insertBranch(Branch currentNode,
+                              Branch branchToBeAdded) {
+
+        Branch fatherNode = currentNode.getFatherNode();
+        if (currentNode.getFatherNode() == null){
+            fatherNode = root;
+        }
+
+        /*add all leafs to an array so you can distribute them */
+        Rectangle[] brokenItems = new Rectangle[Node.MAX_ORDER + 1];
+        brokenItems[0] = branchToBeAdded;
+
+        int j = 1;
+        for (Rectangle child: currentNode.getChild().getChildren()) {
+            brokenItems[j++] = child; // adding MapObjects to the array
+        }
+
+        if(currentNode != root){
+                /* delete all the information in the Node and then delete the
+                 node */
+            fatherNode.getChild().deleteBranch(currentNode);
+
+        }
+        else{
+                /* delete all the information in the Node */
+            currentNode.getChild().deleteAllChildren();
+
+        }
+
+
+        Rectangle[] aux = new Rectangle[2];
+        Branch[] auxBranches = new Branch[2];
+
+
+        aux = Rectangle.findFarAwayNode(brokenItems);
+        auxBranches[0] = new Branch(new Node(),fatherNode, aux[0].getX1(),
+                aux[0].getY1(),aux[0].getX2(),aux[0].getY2());
+        auxBranches[0].getChild().addChild(aux[0]);
+        aux[0].setFatherNode(auxBranches[0]);
+
+        auxBranches[1] = new Branch(new Node(),fatherNode, aux[1].getX1(),
+                aux[1].getY1(),aux[1].getX2(),aux[1].getY2());
+        auxBranches[1].getChild().addChild(aux[1]);
+        aux[1].setFatherNode(auxBranches[1]);
+
+        for (Rectangle left: (brokenItems)) {
+            if (left != aux[0] && left != aux[1]){
+                if (left.getDistance(auxBranches[0]) > left.getDistance(auxBranches[1])){
+                    auxBranches[1].getChild().addChild(left);
+                    auxBranches[1].resize();
+                    auxBranches[1].getChild().getChild(left).setFatherNode(auxBranches[1]);
+                }
+                else{
+                    auxBranches[0].getChild().addChild(left);
+                    auxBranches[0].resize();
+                    auxBranches[0].getChild().getChild(left).setFatherNode(auxBranches[0]);
+                }
+            }
+        }
+
+        fatherNode.getChild().addChild(auxBranches[0]);
+        fatherNode.resize();
+
+        if (!fatherNode.getChild().addChild(auxBranches[1])){
+            insertBranch(fatherNode, auxBranches[1]);
+        }
+        fatherNode.resize();
+
+    }
+
 
 
 }

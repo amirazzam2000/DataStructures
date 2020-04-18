@@ -36,6 +36,14 @@ public class Node {
         }
         return null;
     }
+    public Rectangle getChild(Rectangle child){
+        for (int i = 0; i < MAX_ORDER; i++) {
+            if(children[i] == child){
+                return children[i];
+            }
+        }
+        return null;
+    }
 
     /**
      * adds a rectangle to the Node

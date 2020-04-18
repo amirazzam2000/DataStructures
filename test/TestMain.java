@@ -13,5 +13,7 @@ public class TestMain {
         for (MapObject object: objects.getObjects()) {
             rTree.addObject(object);
         }
+
+        System.out.printf("");
     }
 }
