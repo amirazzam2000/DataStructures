@@ -7,8 +7,9 @@ public class BTree {
 
     //We would initialize the root, and this is the only attribute the tree would have
 
-    public BTree(Node root){
-        this.root = new Node(true);
+    public BTree(){
+        BTree.root = new Node();
+        BTree.root.isLeaf = true;
     }
 
     public void addItem(ShopObject item){
@@ -30,26 +31,40 @@ public class BTree {
 
             //if items already there
             } else{
+
                 for (int i = 0; i < currentNode.items.length; i++) {
-                    if(currentNode.items[i].getPrice() > item.getPrice()){
-                        ShopObject temp = currentNode.items[i];
+
+                    if(currentNode.items[i] == null){
                         currentNode.items[i] = item;
+                        break;
+                    } else if(currentNode.items[i].getPrice() > item.getPrice()){
 
                         //shift all other items
-                        for (int j = currentNode.items.length-1; j > i+1; j--) {
+                        for (int j = currentNode.items.length-2; j >= i; j--) {
                             currentNode.items[j+1] = currentNode.items[j];
                         }
-
-                        //insert old item into i+1
-                        currentNode.items[i+1] = temp;
+                        //insert item into i+1 (where we started shifting the items)
+                        currentNode.items[i] = item;
+                        break;
                     }
+
                 }
             }
 
         } else{
-            //we check what node we should go to next, and save this value somehow
-            // (for example, if we go to the middle child, we save j = 1)
-            // we go down and insert it
+            Node next = currentNode.children[0];
+
+            //check where we should go down
+            for (int i = 0; i < currentNode.items.length; i++) {
+                if(currentNode.items[i] == null){
+                    next = currentNode.children[i];
+                    break;
+                }else if(item.getPrice() < currentNode.items[i].getPrice()){
+                    next = currentNode.children[i];
+                }
+            }
+
+            insertObject(next, item);
         }
 
         // once we come back up, we reorder the values based on where we inserted the value (on the int j, check the princeton code, you understood (Felipe))
