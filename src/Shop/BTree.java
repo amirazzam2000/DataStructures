@@ -15,14 +15,36 @@ public class BTree {
         insertObject(root, item);
     }
 
-    public void insertObject(Node currentNode, ShopObject item) {
+    private void insertObject(Node currentNode, ShopObject item) {
 
-        //get root
-        //check all values in root
+        //get node
+        //check all values in node
         //check if the current Node is leaf
 
         if(currentNode.isLeaf()){
             //we check where this value should be inserted and insert it
+
+            //if no item there
+            if(currentNode.items[0] == null){
+                currentNode.items[0] = item;
+
+            //if items already there
+            } else{
+                for (int i = 0; i < currentNode.items.length; i++) {
+                    if(currentNode.items[i].getPrice() > item.getPrice()){
+                        ShopObject temp = currentNode.items[i];
+                        currentNode.items[i] = item;
+
+                        //shift all other items
+                        for (int j = currentNode.items.length-1; j > i+1; j--) {
+                            currentNode.items[j+1] = currentNode.items[j];
+                        }
+
+                        //insert old item into i+1
+                        currentNode.items[i+1] = temp;
+                    }
+                }
+            }
 
         } else{
             //we check what node we should go to next, and save this value somehow
