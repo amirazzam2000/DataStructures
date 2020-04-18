@@ -67,9 +67,63 @@ public class BTree {
             insertObject(next, item);
         }
 
+        if(currentNode.isFull()){
+            //1) get middle
+            ShopObject middle = currentNode.items[currentNode.items.length/2];
+
+            if(root == currentNode){
+
+                Node newRoot = new Node();
+                Node newLeftChild = new Node();
+                Node newRightChild = new Node();
+                newRoot.items[0] = middle;
+
+                for (int i = 0; i < currentNode.items.length-1; i++) {
+
+                    if(i <=(currentNode.items.length/2)-1 ){
+                        newLeftChild.items[i] = currentNode.items[i];
+                    }
+                    else{
+                        newRightChild.items[currentNode.items.length-i+1] = currentNode.items[i];
+                    }
+
+                }
+
+                currentNode = newRoot;
+
+            }
+
+            else{
+
+                Node newLeftChild = new Node();
+                Node newRightChild = new Node();
+
+                for (int i = 0; i < currentNode.items.length-1; i++) {
+
+                    if(i <=(currentNode.items.length/2)-1 ){
+                        newLeftChild.items[i] = currentNode.items[i];
+                    }
+                    else{
+                        newRightChild.items[currentNode.items.length-i+1] = currentNode.items[i];
+                    }
+
+                }
+
+
+            }
+
+
+
+            //3) point pointers to children yes
+
         // once we come back up, we reorder the values based on where we inserted the value (on the int j, check the princeton code, you understood (Felipe))
         // ++ to the order of the current node
         // if the node is now full, break it
+
+
+        }
+
+
     }
 
     private void organizeTree(Node currentNode){
