@@ -61,20 +61,17 @@ public class BTree {
             addItemIntoNode(currentNode, item);
 
         } else{
-            Node next = currentNode.children[0];
             int childPos =0;
             //check where we should go down
             for (int i = 0; i < currentNode.items.length; i++) {
                 if(currentNode.items[i] == null){
-                    next = currentNode.children[i];
                     childPos =i;
                     break;
                 }else if(item.getPrice() < currentNode.items[i].getPrice()){
-                    next = currentNode.children[i];
                     childPos =i;
                 }
             }
-            insertObject(next, item);
+            insertObject(currentNode.children[childPos], item);
 
             // check child if full.
             if(currentNode.children[childPos].isFull()){
@@ -88,19 +85,19 @@ public class BTree {
 
                 for (int i = 0; i < currentNode.children.length; i++) {
                     if (i < (currentNode.items.length / 2)) {
-                        left.children[i] = currentNode.children[i];
+                        left.children[i] = currentNode.children[childPos].children[i];
                     }else{
-                        right.children[i - (currentNode.items.length / 2)] = currentNode.children[i];
+                        right.children[i - (currentNode.items.length / 2)] = currentNode.children[childPos].children[i];
                     }
                 }
 
                 for (int i = 0; i < currentNode.items.length-1; i++) {
 
-                    if(i <=(currentNode.items.length/2)-1 ){
-                        left.items[i] = currentNode.items[i];
+                    if(i <=(currentNode.items.length/2)-1){
+                        left.items[i] = currentNode.children[childPos].items[i];
                     }
                     else{
-                        right.items[i-(root.items.length/2)] = root.items[i+1];
+                        right.items[i-(currentNode.items.length/2)] = currentNode.children[childPos].items[i+1];
                     }
                 }
 
