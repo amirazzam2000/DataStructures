@@ -61,14 +61,14 @@ public class BTree {
             addItemIntoNode(currentNode, item);
 
         } else{
-            int childPos =0;
+            int childPos = 0;
             //check where we should go down
             for (int i = 0; i < currentNode.items.length; i++) {
                 if(currentNode.items[i] == null){
-                    childPos =i;
                     break;
                 }else if(item.getPrice() < currentNode.items[i].getPrice()){
                     childPos =i;
+                    break;
                 }
             }
             insertObject(currentNode.children[childPos], item);
