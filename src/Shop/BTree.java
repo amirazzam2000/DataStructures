@@ -81,10 +81,10 @@ public class BTree {
                 Node right = new Node();
 
                 for (int i = 0; i < currentNode.children.length; i++) {
-                    if (i < (currentNode.items.length / 2)) {
+                    if (i < (currentNode.children.length / 2)) {
                         left.children[i] = currentNode.children[childPos].children[i];
                     }else{
-                        right.children[i - (currentNode.items.length / 2)] = currentNode.children[childPos].children[i];
+                        right.children[i - (currentNode.children.length / 2)] = currentNode.children[childPos].children[i];
                     }
                 }
 

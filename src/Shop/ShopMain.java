@@ -12,7 +12,7 @@ public class ShopMain {
 
         BTree tree = new BTree();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < items.length; i++) {
             System.out.println("Inserting item: " + items[i].getPrice());
             tree.addItem(items[i]);
         }
