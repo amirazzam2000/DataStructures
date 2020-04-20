@@ -111,7 +111,7 @@ public class Rectangle {
     }
 
     public boolean isInside(Point p){
-        return (p.getX() < x2 && p.getX() > x1 & p.getY() > y2 && p.getY() < y1 );
+        return (p.getX() <= x2 && p.getX() >= x1 & p.getY() >= y2 && p.getY() <= y1 );
     }
 
     public boolean isInside(Rectangle r){

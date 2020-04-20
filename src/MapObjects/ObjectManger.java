@@ -25,6 +25,11 @@ public class ObjectManger {
         }
     }
 
+    public MapObject getObjectsById(int id){
+
+        return objects[id - 1];
+    }
+
     public MapObject[] getObjects() {
         return objects;
     }
