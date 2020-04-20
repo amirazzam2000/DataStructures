@@ -1,45 +1,48 @@
 package Shop;
 
+import java.util.Arrays;
+
 //For implementing a B-tree of order MAX_ORDER
 class Node {
     private static final int MAX_ORDER = 3;
 
     public ShopObject[] items = new ShopObject[MAX_ORDER];
 
-    public int order;
+    public Node[] children = new Node[MAX_ORDER+1];
 
-    public Node leftChild;
-    public Node middleChild;
-    public Node rightChild;
+    public boolean isLeaf = true;
 
-    //would we need this since we only have root as the class variable in BTree?
-    public boolean isRoot = false;
+    public Node(){
 
-    public Node(boolean isRoot){
-        leftChild = null;
-        middleChild = null;
-        rightChild = null;
-
-        this.isRoot = isRoot;
-
-        this.order =0;
+        Arrays.fill(children, null);
 
         for (int i = 0; i < MAX_ORDER-1; i++) {
             items[i] = null;
         }
     }
 
-    public boolean isRoot() {
-        return isRoot;
+    public Node(ShopObject item){
+        Arrays.fill(children, null);
+
+        items[0] = item;
+
+        for (int i = 1; i < MAX_ORDER-1; i++) {
+            items[i] = null;
+        }
     }
 
     public boolean isFull(){
-        return order >= 3;
+        return items[MAX_ORDER-1] != null;
     }
 
+    public void makeLeftChild(ShopObject[] items, Node[] children){
+        for (int i = 0; i < items.length; i++) {
+            this.items[i] = items[i];
+        }
+    }
 
     public boolean isLeaf() {
-        return leftChild == null && middleChild == null && rightChild == null;
+        return this.isLeaf;
     }
 }
 
