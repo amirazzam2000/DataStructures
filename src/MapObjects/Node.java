@@ -24,6 +24,8 @@ public class Node {
         return children;
     }
 
+
+
     /**
      * gets a rectangle of the current Node
      * @param num the number of the rectangle requested
@@ -54,6 +56,8 @@ public class Node {
         for (int i = 0; i < children.length; i++) {
             if (children[i] == null) {
                 children[i] = r;
+                if (children[i].getFatherNode() != null)
+                children[i].getFatherNode().resize();
                 return true;
             }
         }
@@ -79,20 +83,20 @@ public class Node {
      * @return if the rectangle has been deleted successfully
      */
     public boolean deleteChild(Rectangle r){
-        if (isLeaf()) {
-            for (int i = 0; i < MAX_ORDER; i++) {
-                if (children[i] == r) {
-                    if (i != MAX_ORDER - 1){
-                        for (int j = i + 1; j < MAX_ORDER ; j++) {
-                            children[i] = children[j];
-                            i++;
-                        }
+
+        for (int i = 0; i < MAX_ORDER; i++) {
+            if (children[i] == r) {
+                if (i != MAX_ORDER - 1){
+                    for (int j = i + 1; j < MAX_ORDER ; j++) {
+                        children[i] = children[j];
+                        i++;
                     }
-                    children[i] = null;
-                    return true;
                 }
+                children[i] = null;
+                return true;
             }
         }
+
         return false;
     }
 
