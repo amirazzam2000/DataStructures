@@ -9,7 +9,6 @@ public class BTree {
 
     public BTree(){
         BTree.root = new Node();
-        BTree.root.isLeaf = true;
     }
 
     public void addItem(ShopObject item){
@@ -25,10 +24,10 @@ public class BTree {
             Node right = new Node();
 
             for (int i = 0; i < root.children.length; i++) {
-                if (i < (root.items.length / 2)) {
+                if (i < (root.children.length / 2)) {
                     left.children[i] = root.children[i];
                 }else{
-                    right.children[i - (root.items.length / 2)] = root.children[i];
+                    right.children[i - (root.children.length / 2)] = root.children[i];
                 }
             }
 
@@ -46,7 +45,6 @@ public class BTree {
             newRoot.children[1] = right;
 
             root = newRoot;
-            root.isLeaf = false;
         }
     }
 
@@ -66,9 +64,8 @@ public class BTree {
             for (int i = 0; i < currentNode.items.length; i++) {
                 if(currentNode.items[i] == null){
                     break;
-                }else if(item.getPrice() < currentNode.items[i].getPrice()){
-                    childPos =i;
-                    break;
+                }else if(item.getPrice() > currentNode.items[i].getPrice()){
+                    childPos =i+1;
                 }
             }
             insertObject(currentNode.children[childPos], item);

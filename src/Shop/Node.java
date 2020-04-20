@@ -10,7 +10,7 @@ class Node {
 
     public Node[] children = new Node[MAX_ORDER+1];
 
-    public boolean isLeaf = true;
+    //public boolean isLeaf = true;
 
     public Node(){
 
@@ -42,7 +42,14 @@ class Node {
     }
 
     public boolean isLeaf() {
-        return this.isLeaf;
+        boolean isLeaf = true;
+
+        for (int i = 0; i < this.children.length; i++) {
+            if(this.children[i] != null){
+                return false;
+            }
+        }
+        return isLeaf;
     }
 }
 
