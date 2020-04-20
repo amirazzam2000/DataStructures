@@ -184,4 +184,30 @@ public class RTree {
         }
     }
 
+    private void showGraph(Rectangle currentBranch, int tabs){
+        tabs++;
+        for (int i = 0; i < Node.MAX_ORDER ; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < tabs; j++) {
+                sb.append('\t');
+            }
+
+                Branch branch = (Branch) currentBranch;
+                if(branch.getChild().getChild(i) != null){
+                    sb.append(branch.getChild().getChild(i).getId());
+                    System.out.println(sb.toString());
+                    if(branch.getChild().getChild(i)!= null &&
+                            branch.getChild().getChild(i) instanceof Branch){
+                    showGraph(branch.getChild().getChild(i), tabs);
+                    }
+
+                }
+        }
+        tabs--;
+    }
+
+    public void showGraph(){
+        showGraph(root, -1);
+    }
+
 }

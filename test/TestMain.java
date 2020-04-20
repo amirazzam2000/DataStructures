@@ -23,7 +23,9 @@ public class TestMain {
         Queue<MapObject> objectQueue = rTree.findObject(new Point(50,750));
         objectQueue.add(rTree.findObject(new Point(20,500)));
 
-        if (!objectQueue.isEmpty()){
+        rTree.showGraph();
+
+        /*if (!objectQueue.isEmpty()){
             Scanner sc = new Scanner(System.in);
             int id;
             boolean exit = false;
@@ -56,7 +58,7 @@ public class TestMain {
         else {
             System.out.println("Sorry No objects where found!");
         }
-        System.out.printf("");
+        System.out.printf("");*/
 
        /* class Panel extends JPanel {
             RTree rTree;
