@@ -98,6 +98,10 @@ public class BTree {
                     }
                 }
 
+                for (int j = currentNode.children.length-2; j >= index; j--) {
+                    currentNode.children[j+1] = currentNode.children[j];
+                }
+
                 currentNode.children[index] = left;
                 currentNode.children[index+1] = right;
             }
