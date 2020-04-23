@@ -17,8 +17,8 @@ public class ShopMain {
             tree.addItem(items[i]);
         }
 
-        System.out.println(BTree.root);
+        Node found = (tree.search(items[7]));
 
-        System.out.println("a");
+        System.out.println(BTree.root);
     }
 }

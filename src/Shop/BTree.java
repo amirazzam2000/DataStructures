@@ -14,15 +14,22 @@ public class BTree {
     public void addItem(ShopObject item){
         insertObject(root, item);
 
+        //check if root full
         if(root.isFull()){
+
+            //
+
             //split root
             ShopObject middle = root.items[root.items.length/2];
 
+            //new root node
             Node newRoot = new Node(middle);
 
+            //new children
             Node left = new Node();
             Node right = new Node();
 
+            //assign the children to the left and right nodes
             for (int i = 0; i < root.children.length; i++) {
                 if (i < (root.children.length / 2)) {
                     left.children[i] = root.children[i];
@@ -31,6 +38,7 @@ public class BTree {
                 }
             }
 
+            //assign the items to the left and right nodes
             for (int i = 0; i < root.items.length-1; i++) {
 
                 if(i <=(root.items.length/2)-1 ){
@@ -40,6 +48,8 @@ public class BTree {
                     right.items[i-(root.items.length/2)] = root.items[i+1];
                 }
             }
+
+            //
 
             newRoot.children[0] = left;
             newRoot.children[1] = right;
@@ -80,6 +90,7 @@ public class BTree {
                 Node left = new Node();
                 Node right = new Node();
 
+                //assign the children to the left and right nodes
                 for (int i = 0; i < currentNode.children.length; i++) {
                     if (i < (currentNode.children.length / 2)) {
                         left.children[i] = currentNode.children[childPos].children[i];
@@ -88,6 +99,7 @@ public class BTree {
                     }
                 }
 
+                //assign the items to the left and right nodes
                 for (int i = 0; i < currentNode.items.length-1; i++) {
 
                     if(i <=(currentNode.items.length/2)-1){
@@ -98,10 +110,13 @@ public class BTree {
                     }
                 }
 
+                //move all the previous children 1 place to the right, from where we have
+                //inserted the item from the child
                 for (int j = currentNode.children.length-2; j >= index; j--) {
                     currentNode.children[j+1] = currentNode.children[j];
                 }
 
+                //assign the children
                 currentNode.children[index] = left;
                 currentNode.children[index+1] = right;
             }
@@ -139,7 +154,27 @@ public class BTree {
         }
     }
 
-    private void deleteNode(){
-
+    public Node search(ShopObject item){
+        return traverse(item, root);
     }
+
+    //returns node since we also use this method for deletion
+    private Node traverse(ShopObject item, Node node){
+
+        int childPos = 0;
+
+        for (int i = 0; i < node.items.length; i++) {
+            if(node.items[i] == item){
+                return node;
+            }else if(node.items[i] != null && node.items[i].getPrice() < item.getPrice()){
+                childPos = i+1;
+            }
+        }
+        if(node.isLeaf()){
+            return null;
+        }else{
+            return traverse(item, node.children[childPos]);
+        }
+    }
+
 }

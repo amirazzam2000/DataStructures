@@ -4,13 +4,11 @@ import java.util.Arrays;
 
 //For implementing a B-tree of order MAX_ORDER
 class Node {
-    private static final int MAX_ORDER = 3;
+    public static final int MAX_ORDER = 3;
 
     public ShopObject[] items = new ShopObject[MAX_ORDER];
 
     public Node[] children = new Node[MAX_ORDER+1];
-
-    //public boolean isLeaf = true;
 
     public Node(){
 
