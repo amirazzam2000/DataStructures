@@ -33,6 +33,17 @@ class Node {
         return items[MAX_ORDER-1] != null;
     }
 
+    public boolean isEmpty(){
+        boolean isEmpty = true;
+
+        for (int i = 0; i < this.items.length; i++) {
+            if(this.items[i] != null){
+                return false;
+            }
+        }
+        return isEmpty;
+    }
+
     public void makeLeftChild(ShopObject[] items, Node[] children){
         for (int i = 0; i < items.length; i++) {
             this.items[i] = items[i];

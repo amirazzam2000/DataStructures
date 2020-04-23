@@ -17,8 +17,6 @@ public class BTree {
         //check if root full
         if(root.isFull()){
 
-            //
-
             //split root
             ShopObject middle = root.items[root.items.length/2];
 
@@ -48,8 +46,6 @@ public class BTree {
                     right.items[i-(root.items.length/2)] = root.items[i+1];
                 }
             }
-
-            //
 
             newRoot.children[0] = left;
             newRoot.children[1] = right;
@@ -158,23 +154,72 @@ public class BTree {
         return traverse(item, root);
     }
 
-    //returns node since we also use this method for deletion
+    //returns node
     private Node traverse(ShopObject item, Node node){
 
         int childPos = 0;
 
         for (int i = 0; i < node.items.length; i++) {
             if(node.items[i] == item){
+
                 return node;
             }else if(node.items[i] != null && node.items[i].getPrice() < item.getPrice()){
                 childPos = i+1;
             }
         }
+
         if(node.isLeaf()){
             return null;
         }else{
             return traverse(item, node.children[childPos]);
         }
     }
+
+
+    public boolean delete(ShopObject item){
+        return traverseDeletion(item, root, -1);
+    }
+
+    private boolean traverseDeletion(ShopObject item, Node node, int parentPos){
+
+        int childPos = 0;
+
+        for (int i = 0; i < node.items.length; i++) {
+            if(node.items[i] == item){
+                //if we found the item, perform the deletion
+
+                //if it is not a leaf
+                if(!node.isLeaf()){
+
+                }else{
+                    //set item to null (delete it)
+                    node.items[i] = null;
+
+                    //shift other items (if not empty after that)
+                    if(!node.isEmpty()){
+                        for (int j = i; j < node.items.length-1; j++) {
+                            node.items[j] = node.items[j+1];
+                            node.items[j+1] = null;
+                        }
+                    }
+
+                }
+
+                return true;
+            }else if(node.items[i] != null && node.items[i].getPrice() < item.getPrice()){
+                childPos = i+1;
+            }
+        }
+
+        if(node.isLeaf()){
+            return false;
+        }else{
+            return traverseDeletion(item, node.children[childPos], childPos);
+
+            //check if the node we are at is empty / has too few children, etc.
+
+        }
+    }
+
 
 }
