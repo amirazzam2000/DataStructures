@@ -1,7 +1,5 @@
 package Shop;
 
-import java.awt.*;
-
 public class BTree {
     public static Node root;
 
@@ -190,6 +188,10 @@ public class BTree {
 
                 //if it is not a leaf
                 if(!node.isLeaf()){
+                    ShopObject predecesor = getPred(node, i);
+                    node.items[i] = predecesor;
+
+                    //TODO: return the node o[f the predecesor
 
                 }else{
                     //set item to null (delete it)
@@ -202,10 +204,9 @@ public class BTree {
                             node.items[j+1] = null;
                         }
                     }
-
                 }
-
                 return true;
+
             }else if(node.items[i] != null && node.items[i].getPrice() < item.getPrice()){
                 childPos = i+1;
             }
@@ -215,11 +216,56 @@ public class BTree {
             return false;
         }else{
             return traverseDeletion(item, node.children[childPos], childPos);
-
             //check if the node we are at is empty / has too few children, etc.
 
         }
     }
 
+    //predecesor is removed once returned
+    private ShopObject getPred(Node node, int itemIndex){
+        int pred =0;
+
+        if(!node.isLeaf()){
+            for (int i = 0; i < node.children.length; i++) {
+                if(node.children[itemIndex].items[i] == null){
+                    pred = i-1;
+                    break;
+                }
+            }
+            return getPred(node.children[itemIndex], pred);
+
+        }else{
+            for (int i = 0; i < node.children.length; i++) {
+                if(node.children[itemIndex].items[i] == null){
+                    pred = i-1;
+                    break;
+                }
+            }
+            ShopObject predecesor = node.items[pred];
+            node.items[pred] = null;
+            return predecesor;
+        }
+    }
+
+
+    //precondition is to pass this function the correct child node of the item's node we are looking for
+    //successor removed once it is returned
+    private ShopObject getSucc(Node node) {
+        if(!node.isLeaf()){
+            return getSucc(node.children[0]);
+
+        }else{
+            ShopObject succ = node.items[0];
+            node.items[0] = null;
+
+            //if the remaining node is not empty, shift the items to the right
+            if(!node.isEmpty()){
+                for (int j = 0; j < node.items.length-1; j++) {
+                    node.items[j] = node.items[j+1];
+                    node.items[j+1] = null;
+                }
+            }
+        }
+    }
 
 }
