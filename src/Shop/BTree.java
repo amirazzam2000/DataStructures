@@ -258,16 +258,22 @@ public class BTree {
                 //if sibling has 2 or more items, redistribute
                 if(itemsInChild(node.children[siblingPos]) >= 2){
 
+                    //copy value in parent node to deleted value in child
+                    node.children[itemIndex].items[0] = node.items[itemIndex];
+
+                    //get value from sibling into parent
+                    node.items[itemIndex] = node.children[siblingPos].items[itemsInChild(node.children[siblingPos])];
+
+                    //delete value from sibling
+                    deleteItemFromLeaf(node.children[siblingPos], itemsInChild(node.children[siblingPos]));
+
                 }else{
                     //else, merge
                 }
             }
 
-
             return predecesor;
-
         }
-
     }
 
     private void deleteItemFromLeaf(Node node, int itemPos){
