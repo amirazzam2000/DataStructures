@@ -188,22 +188,11 @@ public class BTree {
 
                 //if it is not a leaf
                 if(!node.isLeaf()){
-                    ShopObject predecesor = getPred(node, i);
+                    ShopObject predecesor = getPredecesorAndDelete(node, i);
                     node.items[i] = predecesor;
 
-                    //TODO: return the node o[f the predecesor
-
                 }else{
-                    //set item to null (delete it)
-                    node.items[i] = null;
-
-                    //shift other items (if not empty after that)
-                    if(!node.isEmpty()){
-                        for (int j = i; j < node.items.length-1; j++) {
-                            node.items[j] = node.items[j+1];
-                            node.items[j+1] = null;
-                        }
-                    }
+                    deleteItemFromLeaf(node, i);
                 }
                 return true;
 
@@ -222,17 +211,19 @@ public class BTree {
     }
 
     //predecesor is removed once returned
-    private ShopObject getPred(Node node, int itemIndex){
+    private ShopObject getPredecesorAndDelete(Node node, int itemIndex){
         int pred =0;
 
-        if(!node.isLeaf()){
+        if(node.isLeaf()){
             for (int i = 0; i < node.children.length; i++) {
                 if(node.children[itemIndex].items[i] == null){
                     pred = i-1;
                     break;
                 }
             }
-            return getPred(node.children[itemIndex], pred);
+            ShopObject predecesor = node.items[pred];
+            deleteItemFromLeaf(node, pred);
+            return predecesor;
 
         }else{
             for (int i = 0; i < node.children.length; i++) {
@@ -241,15 +232,71 @@ public class BTree {
                     break;
                 }
             }
-            ShopObject predecesor = node.items[pred];
-            node.items[pred] = null;
+
+            ShopObject predecesor = getPredecesorAndDelete(node.children[itemIndex], pred);
+
+            //check if we need to merge/redistribute
+            //first check if the child is empty
+            if(node.children[itemIndex].isEmpty()){
+
+                int siblingPos =0;
+
+                for (int i = 0; i < node.children.length; i++) {
+                    if(node.children[itemIndex] == node.children[i]){
+                        if(i == Node.MAX_ORDER-1){
+                            siblingPos = Node.MAX_ORDER-2;
+                            break;
+                        }else if(i == 0){
+                            siblingPos = 1;
+                            break;
+                        }else{
+                            siblingPos = i+1;
+                        }
+                    }
+                }
+
+                //if sibling has 2 or more items, redistribute
+                if(itemsInChild(node.children[siblingPos]) >= 2){
+
+                }else{
+                    //else, merge
+                }
+            }
+
+
             return predecesor;
+
         }
+
     }
 
+    private void deleteItemFromLeaf(Node node, int itemPos){
+        //set item to null (delete it)
+        node.items[itemPos] = null;
+
+        //shift other items (if not empty after that)
+        if(!node.isEmpty()){
+            for (int j = itemPos; j < node.items.length-1; j++) {
+                node.items[j] = node.items[j+1];
+                node.items[j+1] = null;
+            }
+        }
+
+    }
+
+    private int itemsInChild(Node child){
+
+        int num_items=0;
+
+        while (child.items[num_items] != null){
+            num_items++;
+        }
+        return num_items;
+    }
 
     //precondition is to pass this function the correct child node of the item's node we are looking for
     //successor removed once it is returned
+    /*
     private ShopObject getSucc(Node node) {
         if(!node.isLeaf()){
             return getSucc(node.children[0]);
@@ -267,5 +314,7 @@ public class BTree {
             }
         }
     }
+
+     */
 
 }
