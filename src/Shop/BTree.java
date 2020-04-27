@@ -188,8 +188,12 @@ public class BTree {
 
                 //if it is not a leaf
                 if(!node.isLeaf()){
-                    ShopObject predecesor = getPredecesorAndDelete(node, i);
-                    node.items[i] = predecesor;
+                    ShopObject predecesor = getPredecesorAndDelete(node, i, item);
+
+                    //if value hasnt been replaced yet
+                    if(node.items[i] == item){
+                        node.items[i] = predecesor;
+                    }
 
                 }else{
                     deleteItemFromLeaf(node, i);
@@ -210,39 +214,31 @@ public class BTree {
         }
     }
 
-    //predecesor is removed once returned
-    private ShopObject getPredecesorAndDelete(Node node, int itemIndex){
+    //predecesor is removed once returned, and the tree is fixed on the "way up"
+    private ShopObject getPredecesorAndDelete(Node node, int childIndex, ShopObject delItem){
         int pred =0;
 
         if(node.isLeaf()){
-            for (int i = 0; i < node.children.length; i++) {
-                if(node.children[itemIndex].items[i] == null){
-                    pred = i-1;
-                    break;
-                }
-            }
+
+            pred = itemsInNode(node)-1;
+
             ShopObject predecesor = node.items[pred];
             deleteItemFromLeaf(node, pred);
             return predecesor;
 
         }else{
-            for (int i = 0; i < node.children.length; i++) {
-                if(node.children[itemIndex].items[i] == null){
-                    pred = i-1;
-                    break;
-                }
-            }
+            pred = itemsInNode(node);
 
-            ShopObject predecesor = getPredecesorAndDelete(node.children[itemIndex], pred);
+            ShopObject predecesor = getPredecesorAndDelete(node.children[childIndex], pred, delItem);
 
             //check if we need to merge/redistribute
             //first check if the child is empty
-            if(node.children[itemIndex].isEmpty()){
+            if(node.children[childIndex].isEmpty()){
 
                 int siblingPos =0;
 
                 for (int i = 0; i < node.children.length; i++) {
-                    if(node.children[itemIndex] == node.children[i]){
+                    if(node.children[childIndex] == node.children[i]){
                         if(i == Node.MAX_ORDER-1){
                             siblingPos = Node.MAX_ORDER-2;
                             break;
@@ -250,25 +246,57 @@ public class BTree {
                             siblingPos = 1;
                             break;
                         }else{
-                            siblingPos = i+1;
+                            siblingPos = i-1;
+                            break;
                         }
                     }
                 }
 
                 //if sibling has 2 or more items, redistribute
-                if(itemsInChild(node.children[siblingPos]) >= 2){
+                if(itemsInNode(node.children[siblingPos]) >= 2){
 
-                    //copy value in parent node to deleted value in child
-                    node.children[itemIndex].items[0] = node.items[itemIndex];
+                    // check if the value at the parent isnt the one we want to delete,
+                    // because if it is, we need to replace the parent with the predecesor
+                    if(node.items[childIndex] == delItem){
+                        //copy value in parent node to deleted value in child
+                        node.children[childIndex].items[0] = predecesor;
+                    }else{
+                        //copy value in parent node to deleted value in child
+                        node.children[childIndex].items[0] = node.items[childIndex-1];
+                    }
 
-                    //get value from sibling into parent
-                    node.items[itemIndex] = node.children[siblingPos].items[itemsInChild(node.children[siblingPos])];
+                    //check child index value
+                    //we use it to place the item in the parents
+                    if(childIndex !=0){
+                        //get value from sibling into parent
+                        //check what sibling pos is and get sibling based on that
+                        if(siblingPos == 0) {
+                            node.items[childIndex-1] = node.children[siblingPos].items[itemsInNode(node.children[siblingPos])-1];
+                            //delete value from sibling
+                            deleteItemFromLeaf(node.children[siblingPos], itemsInNode(node.children[siblingPos])-1);
+                        }else{
+                            node.items[childIndex-1] = node.children[siblingPos].items[0];
+                            //delete value from sibling
+                            deleteItemFromLeaf(node.children[siblingPos], 0);
+                        }
+                    }else{
+                        //get value from sibling into parent
+                        //check what sibling pos is and get sibling based on that
+                        if(siblingPos == 0) {
+                            node.items[childIndex] = node.children[siblingPos].items[itemsInNode(node.children[siblingPos])-1];
+                            //delete value from sibling
+                            deleteItemFromLeaf(node.children[siblingPos], itemsInNode(node.children[siblingPos])-1);
+                        }else{
+                            node.items[childIndex] = node.children[siblingPos].items[0];
+                            //delete value from sibling
+                            deleteItemFromLeaf(node.children[siblingPos], 0);
+                        }
+                    }
 
-                    //delete value from sibling
-                    deleteItemFromLeaf(node.children[siblingPos], itemsInChild(node.children[siblingPos]));
 
                 }else{
                     //else, merge
+                    System.out.println("a");
                 }
             }
 
@@ -290,11 +318,11 @@ public class BTree {
 
     }
 
-    private int itemsInChild(Node child){
+    private int itemsInNode(Node node){
 
         int num_items=0;
 
-        while (child.items[num_items] != null){
+        while (node.items[num_items] != null){
             num_items++;
         }
         return num_items;
