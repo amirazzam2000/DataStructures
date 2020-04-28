@@ -20,6 +20,7 @@ public class ShopMain {
         Node found = (tree.search(items[7]));
 
         tree.delete(items[7]);
+        tree.delete(items[11]);
 
         System.out.println(BTree.root);
     }

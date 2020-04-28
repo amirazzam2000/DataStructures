@@ -44,6 +44,17 @@ class Node {
         return isEmpty;
     }
 
+    public boolean hasNoChildren(){
+        boolean hasChildren = true;
+
+        for (int i = 0; i < this.children.length; i++) {
+            if(this.children[i] != null){
+                return false;
+            }
+        }
+        return hasChildren;
+    }
+
     public void makeLeftChild(ShopObject[] items, Node[] children){
         for (int i = 0; i < items.length; i++) {
             this.items[i] = items[i];
@@ -59,6 +70,20 @@ class Node {
             }
         }
         return isLeaf;
+    }
+
+    public void addChildToNode(Node child){
+        this.children[this.itemsInNode()] = child;
+    }
+
+    public int itemsInNode(){
+
+        int num_items=0;
+
+        while (this.items[num_items] != null){
+            num_items++;
+        }
+        return num_items;
     }
 }
 
