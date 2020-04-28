@@ -175,7 +175,14 @@ public class BTree {
 
 
     public boolean delete(ShopObject item){
-        return traverseDeletion(item, root, -1);
+        boolean result = traverseDeletion(item, root, -1);
+
+        //if the root is empty, it has been merged, so set the new root to the child of the root
+        if(root.isEmpty()){
+            root = root.children[0];
+        }
+
+        return result;
     }
 
     private boolean traverseDeletion(ShopObject item, Node node, int parentPos){

@@ -23,6 +23,7 @@ public class ShopMain {
         tree.delete(items[11]);
         tree.delete(items[10]);
         tree.delete(items[12]);
+        tree.delete(items[5]);
 
         System.out.println(BTree.root);
     }
