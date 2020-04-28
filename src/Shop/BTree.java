@@ -210,11 +210,11 @@ public class BTree {
         }else{
             boolean result = traverseDeletion(item, node.children[childPos], childPos);
 
-            /*
             if(node.children[childPos].isEmpty()){
 
                 int siblingPos =0;
 
+                //get the sibling position
                 for (int i = 0; i < node.children.length; i++) {
                     if(node.children[childPos] == node.children[i]){
                         if(i == Node.MAX_ORDER-1){
@@ -233,18 +233,15 @@ public class BTree {
                 //if sibling has 2 or more items, redistribute
                 if(node.children[siblingPos].itemsInNode() >= 2){
 
-                        //copy value in parent node to deleted value in child
-                        node.children[childPos].items[0] = node.items[childPos-1];
+                    //copy value in parent node to deleted value in child
+                    node.children[childPos].items[0] = node.items[childPos-1];
 
-
-                    //check child index value
+                    //get the position from where we should get the item from the sibling
                     //we use it to place the item in the parent node
                     if(childPos !=0){
                         //get value from sibling into parent
                         //check what sibling pos is and get sibling based on that
-
-                        //!!!!!!!!!!!!!!!!!!!
-                        if(siblingPos == 0) {
+                        if(childPos > siblingPos) {
                             node.items[childPos-1] = node.children[siblingPos].items[node.children[siblingPos].itemsInNode()-1];
                             //delete value from sibling
                             deleteItemFromLeaf(node.children[siblingPos], node.children[siblingPos].itemsInNode()-1);
@@ -253,19 +250,40 @@ public class BTree {
                             //delete value from sibling
                             deleteItemFromLeaf(node.children[siblingPos], 0);
                         }
-                        //!!!!!!!!!!!!!!!!!!!
-
                     }else{
                         //get value from sibling into parent
-                        //check what sibling pos is and get sibling based on that
-                        if(siblingPos == 0) {
-                            node.items[childPos] = node.children[siblingPos].items[node.children[siblingPos].itemsInNode()-1];
-                            //delete value from sibling
-                            deleteItemFromLeaf(node.children[siblingPos], node.children[siblingPos].itemsInNode()-1);
+                        //since the child is 0 (checked before), we can assume we need to get the first item in the sibling
+                        node.items[childPos] = node.children[siblingPos].items[0];
+                        //delete value from sibling
+                        deleteItemFromLeaf(node.children[siblingPos], 0);
+                    }
+
+                    //If the node we took from had children, it will have one child too many now
+                    //So we take the child that is closest to us from them
+                    if(!node.children[childPos].hasNoChildren()){
+                        // and add this child to the node what was empty
+                        if(childPos > siblingPos){
+                            // this means we need to add the child to position 0, but first shift the existing children one to the right
+
+                            for (int i = node.children[childPos].children.length-2; i >0 ; i--) {
+                                node.children[childPos].children[i] = node.children[childPos].children[i-1];
+                            }
+
+                            //add the child to pos 0 of the child
+                            //Note the plus one, since this node has 1 less child than it used to --------------------------------------- here
+                            node.children[childPos].children[0] = node.children[siblingPos].children[node.children[siblingPos].itemsInNode()+1];
+
+                            //erase the child from the sibling node
+                            node.children[siblingPos].children[node.children[siblingPos].itemsInNode()+1] = null;
+
                         }else{
-                            node.items[childPos] = node.children[siblingPos].items[0];
-                            //delete value from sibling
-                            deleteItemFromLeaf(node.children[siblingPos], 0);
+                            //this means we need to add to the end of our node the 0th child from our sibling
+                            node.children[childPos].addChildToNode(node.children[siblingPos].children[0]);
+
+                            //then shift all the children in the sibling 1 pos to the left, overwriting the child we just stole
+                            for (int i = 0; i < node.children[siblingPos].children.length-2; i++) {
+                                node.children[siblingPos].children[i] = node.children[siblingPos].children[i+1];
+                            }
                         }
                     }
 
@@ -273,10 +291,9 @@ public class BTree {
                 }else{
                     //else, merge
 
-                        //add value in parent node to the sibling
-                        addItemIntoNode(node.children[siblingPos], node.items[childPos-1]);
-                        node.items[childPos-1] = null;
-
+                    //add value in parent node to the sibling
+                    addItemIntoNode(node.children[siblingPos], node.items[childPos-1]);
+                    node.items[childPos-1] = null;
 
                     //if the child has no children
                     if(node.children[childPos].hasNoChildren()){
@@ -285,7 +302,21 @@ public class BTree {
                     }else{
                         //if it does, it is one child left from the merge,
                         // and add this child to the sibling
-                        node.children[siblingPos].addChildToNode(node.children[childPos].children[0]);
+
+                        if(childPos > siblingPos){
+                            //this means we have to add the child in our child to the sibling's last position
+                            node.children[siblingPos].addChildToNode(node.children[childPos].children[0]);
+
+                            //delete the remaining node
+                            node.children[childPos] = null;
+                        }else{
+                            //this means that we have to add the child in our child to the first pos in our sibling
+                            for (int i = node.children[childPos].children.length-2; i >0 ; i--) {
+                                node.children[childPos].children[i] = node.children[childPos].children[i-1];
+                            }
+
+                            node.children[siblingPos].children[0] = node.children[childPos].children[0];
+                        }
                     }
 
 
@@ -296,7 +327,7 @@ public class BTree {
                     }
                 }
             }
-            */
+
 
             return result;
         }
@@ -325,6 +356,7 @@ public class BTree {
 
                 int siblingPos =0;
 
+                //get the sibling position
                 for (int i = 0; i < node.children.length; i++) {
                     if(node.children[childPos] == node.children[i]){
                         if(i == Node.MAX_ORDER-1){
@@ -353,12 +385,12 @@ public class BTree {
                         node.children[childPos].items[0] = node.items[childPos-1];
                     }
 
-                    //check child index value
+                    //get the position from where we should get the item from the sibling
                     //we use it to place the item in the parent node
                     if(childPos !=0){
                         //get value from sibling into parent
                         //check what sibling pos is and get sibling based on that
-                        if(siblingPos == 0) {
+                        if(childPos > siblingPos) {
                             node.items[childPos-1] = node.children[siblingPos].items[node.children[siblingPos].itemsInNode()-1];
                             //delete value from sibling
                             deleteItemFromLeaf(node.children[siblingPos], node.children[siblingPos].itemsInNode()-1);
@@ -369,15 +401,38 @@ public class BTree {
                         }
                     }else{
                         //get value from sibling into parent
-                        //check what sibling pos is and get sibling based on that
-                        if(siblingPos == 0) {
-                            node.items[childPos] = node.children[siblingPos].items[node.children[siblingPos].itemsInNode()-1];
-                            //delete value from sibling
-                            deleteItemFromLeaf(node.children[siblingPos], node.children[siblingPos].itemsInNode()-1);
+                        //since the child is 0 (checked before), we can assume we need to get the first item in the sibling
+                        node.items[childPos] = node.children[siblingPos].items[0];
+                        //delete value from sibling
+                        deleteItemFromLeaf(node.children[siblingPos], 0);
+                    }
+
+                    //If the node we took from had children, it will have one child too many now
+                    //So we take the child that is closest to us from them
+                    if(!node.children[childPos].hasNoChildren()){
+                        // and add this child to the node what was empty
+                        if(childPos > siblingPos){
+                            // this means we need to add the child to position 0, but first shift the existing children one to the right
+
+                            for (int i = node.children[childPos].children.length-2; i >0 ; i--) {
+                                node.children[childPos].children[i] = node.children[childPos].children[i-1];
+                            }
+
+                            //add the child to pos 0 of the child
+                            //Note the plus one, since this node has 1 less child than it used to --------------------------------------- here
+                            node.children[childPos].children[0] = node.children[siblingPos].children[node.children[siblingPos].itemsInNode()+1];
+
+                            //erase the child from the sibling node
+                            node.children[siblingPos].children[node.children[siblingPos].itemsInNode()+1] = null;
+
                         }else{
-                            node.items[childPos] = node.children[siblingPos].items[0];
-                            //delete value from sibling
-                            deleteItemFromLeaf(node.children[siblingPos], 0);
+                            //this means we need to add to the end of our node the 0th child from our sibling
+                            node.children[childPos].addChildToNode(node.children[siblingPos].children[0]);
+
+                            //then shift all the children in the sibling 1 pos to the left, overwriting the child we just stole
+                            for (int i = 0; i < node.children[siblingPos].children.length-2; i++) {
+                                node.children[siblingPos].children[i] = node.children[siblingPos].children[i+1];
+                            }
                         }
                     }
 
@@ -404,9 +459,22 @@ public class BTree {
                     }else{
                         //if it does, it is one child left from the merge,
                         // and add this child to the sibling
-                        node.children[siblingPos].addChildToNode(node.children[childPos].children[0]);
-                    }
 
+                        if(childPos > siblingPos){
+                            //this means we have to add the child in our child to the sibling's last position
+                            node.children[siblingPos].addChildToNode(node.children[childPos].children[0]);
+
+                            //delete the remaining node
+                            node.children[childPos] = null;
+                        }else{
+                            //this means that we have to add the child in our child to the first pos in our sibling
+                            for (int i = node.children[childPos].children.length-2; i >0 ; i--) {
+                                node.children[childPos].children[i] = node.children[childPos].children[i-1];
+                            }
+
+                            node.children[siblingPos].children[0] = node.children[childPos].children[0];
+                        }
+                    }
 
                     //shift children before and including childpos in parent to the left
                     for (int j = childPos; j < node.children.length-1; j++) {
