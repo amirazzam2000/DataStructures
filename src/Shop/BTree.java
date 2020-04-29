@@ -200,7 +200,12 @@ public class BTree {
                             siblingPos = 1;
                             break;
                         }else{
-                            siblingPos = i-1;
+                            //check both sides to see which sibling has more values
+                            if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
+                                siblingPos = i+1;
+                            }else{
+                                siblingPos = i-1;
+                            }
                             break;
                         }
                     }
@@ -359,7 +364,12 @@ public class BTree {
                             siblingPos = 1;
                             break;
                         }else{
-                            siblingPos = i-1;
+                            //check both sides to see which sibling has more values
+                            if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
+                                siblingPos = i+1;
+                            }else{
+                                siblingPos = i-1;
+                            }
                             break;
                         }
                     }
@@ -370,9 +380,12 @@ public class BTree {
 
                     // check if the value at the parent isnt the one we want to delete,
                     // because if it is, we need to replace the parent with the predecesor
-                    if(node.items[childPos] == delItem && node.itemsInNode() == 1){
+
+                    ///TODO CHECK CUS I CHANGED THIS AND IT MAKES SENSE BUT WE HAVE TO DELETE THE TREE FROM 0 again to see it work
+
+                    if(node.items[childPos] == delItem){
                         //copy value in parent node to deleted value in child
-                        node.children[childPos].items[0] = predecesor;
+                        node.children[childPos].items[childPos] = predecesor;
                     }else{
                         //copy value in parent node to deleted value in child
                         node.children[childPos].items[0] = node.items[childPos-1];

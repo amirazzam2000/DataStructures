@@ -29,8 +29,8 @@ public class ShopMain {
         tree.delete(items[1]);
         tree.delete(items[6]);
         tree.delete(items[8]);
-        //tree.delete(items[14]);
-        //tree.delete(items[13]);
+        tree.delete(items[4]);
+        tree.delete(items[14]);
 
         System.out.println(BTree.root);
     }
