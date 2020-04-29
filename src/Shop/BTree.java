@@ -117,42 +117,12 @@ public class BTree {
         }
     }
 
-    private int addItemIntoNode(Node node, ShopObject item){
-
-        //if no item there
-        if(node.items[0] == null){
-            node.items[0] = item;
-            return 0;
-
-        //if items already there
-        } else{
-            int index = 1;
-            for (int i = 0; i < node.items.length; i++) {
-
-                if(node.items[i] == null){
-                    node.items[i] = item;
-                    return i;
-
-                } else if(node.items[i].getPrice() > item.getPrice()){
-
-                    //shift all other items
-                    for (int j = node.items.length-2; j >= i; j--) {
-                        node.items[j+1] = node.items[j];
-                    }
-                    //insert item into i+1 (where we started shifting the items)
-                    node.items[i] = item;
-                    return i;
-                }
-            }
-            return index;
-        }
-    }
-
     public Node search(ShopObject item){
         return traverse(item, root);
     }
 
     //returns node
+
     private Node traverse(ShopObject item, Node node){
 
         int childPos = 0;
@@ -172,7 +142,6 @@ public class BTree {
             return traverse(item, node.children[childPos]);
         }
     }
-
 
     public boolean delete(ShopObject item){
         boolean result = traverseDeletion(item, root, -1);
@@ -299,8 +268,24 @@ public class BTree {
                     //else, merge
 
                     //add value in parent node to the sibling
-                    addItemIntoNode(node.children[siblingPos], node.items[childPos-1]);
-                    node.items[childPos-1] = null;
+                    if(childPos !=0){
+                        addItemIntoNode(node.children[siblingPos], node.items[childPos-1]);
+
+                        //don't just set the node to null, shift all the items from that pos to the left
+                        //node.items[childPos-1] = null;
+                        for (int j = childPos-1; j < node.items.length-1; j++) {
+                            node.items[j] = node.items[j+1];
+                            node.items[j+1] = null;
+                        }
+                    }else{
+                        addItemIntoNode(node.children[siblingPos], node.items[childPos]);
+                        //don't just set the node to null, shift all the items from that pos to the left
+                        //node.items[childPos-1] = null;
+                        for (int j = childPos; j < node.items.length-1; j++) {
+                            node.items[j] = node.items[j+1];
+                            node.items[j+1] = null;
+                        }
+                    }
 
                     //if the child has no children
                     if(node.children[childPos].hasNoChildren()){
@@ -318,8 +303,9 @@ public class BTree {
                             node.children[childPos] = null;
                         }else{
                             //this means that we have to add the child in our child to the first pos in our sibling
-                            for (int i = node.children[childPos].children.length-2; i >0 ; i--) {
-                                node.children[childPos].children[i] = node.children[childPos].children[i-1];
+                            //shift the values in our sib,ling to accomodate for the incoming child
+                            for (int i = node.children[siblingPos].children.length-2; i >0 ; i--) {
+                                node.children[siblingPos].children[i] = node.children[siblingPos].children[i-1];
                             }
 
                             node.children[siblingPos].children[0] = node.children[childPos].children[0];
@@ -335,12 +321,12 @@ public class BTree {
                 }
             }
 
-
             return result;
         }
     }
 
     //predecesor is removed once returned, and the tree is fixed on the "way up"
+
     private ShopObject getPredecesorAndDelete(Node node, int childPos, ShopObject delItem){
         int pred =0;
 
@@ -452,11 +438,37 @@ public class BTree {
                     if(node.items[childPos] == delItem){
                         //add value in parent node to the sibling
                         addItemIntoNode(node.children[siblingPos], predecesor);
-                        node.items[childPos] = null;
+
+                        //dont just set the item to null, but shift the others to the left
+                        //node.items[childPos] = null;
+
+
+                        //TODO: works but idk if needed
+                        for (int j = childPos; j < node.items.length-1; j++) {
+                            node.items[j] = node.items[j+1];
+                            node.items[j+1] = null;
+                        }
+
                     }else{
                         //add value in parent node to the sibling
-                        addItemIntoNode(node.children[siblingPos], node.items[childPos-1]);
-                        node.items[childPos-1] = null;
+                        if(childPos !=0){
+                            addItemIntoNode(node.children[siblingPos], node.items[childPos-1]);
+
+                            //don't just set the node to null, shift all the items from that pos to the left
+                            //node.items[childPos-1] = null;
+                            for (int j = childPos-1; j < node.items.length-1; j++) {
+                                node.items[j] = node.items[j+1];
+                                node.items[j+1] = null;
+                            }
+                        }else{
+                            addItemIntoNode(node.children[siblingPos], node.items[childPos]);
+                            //don't just set the node to null, shift all the items from that pos to the left
+                            //node.items[childPos-1] = null;
+                            for (int j = childPos; j < node.items.length-1; j++) {
+                                node.items[j] = node.items[j+1];
+                                node.items[j+1] = null;
+                            }
+                        }
                     }
 
                     //if the child has no children
@@ -475,8 +487,9 @@ public class BTree {
                             node.children[childPos] = null;
                         }else{
                             //this means that we have to add the child in our child to the first pos in our sibling
-                            for (int i = node.children[childPos].children.length-2; i >0 ; i--) {
-                                node.children[childPos].children[i] = node.children[childPos].children[i-1];
+                            //shift the values in our sib,ling to accomodate for the incoming child
+                            for (int i = node.children[siblingPos].children.length-2; i >0 ; i--) {
+                                node.children[siblingPos].children[i] = node.children[siblingPos].children[i-1];
                             }
 
                             node.children[siblingPos].children[0] = node.children[childPos].children[0];
@@ -494,7 +507,6 @@ public class BTree {
             return predecesor;
         }
     }
-
     private void deleteItemFromLeaf(Node node, int itemPos){
         //set item to null (delete it)
         node.items[itemPos] = null;
@@ -509,8 +521,42 @@ public class BTree {
     }
 
 
+    //TODO move to node
+    private int addItemIntoNode(Node node, ShopObject item){
+
+        //if no item there
+        if(node.items[0] == null){
+            node.items[0] = item;
+            return 0;
+
+            //if items already there
+        } else{
+            int index = 1;
+            for (int i = 0; i < node.items.length; i++) {
+
+                if(node.items[i] == null){
+                    node.items[i] = item;
+                    return i;
+
+                } else if(node.items[i].getPrice() > item.getPrice()){
+
+                    //shift all other items
+                    for (int j = node.items.length-2; j >= i; j--) {
+                        node.items[j+1] = node.items[j];
+                    }
+                    //insert item into i+1 (where we started shifting the items)
+                    node.items[i] = item;
+                    return i;
+                }
+            }
+            return index;
+        }
+    }
+
+
     //precondition is to pass this function the correct child node of the item's node we are looking for
     //successor removed once it is returned
+
     /*
     private ShopObject getSucc(Node node) {
         if(!node.isLeaf()){
@@ -531,5 +577,4 @@ public class BTree {
     }
 
      */
-
 }
