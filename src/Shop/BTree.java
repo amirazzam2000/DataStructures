@@ -384,7 +384,7 @@ public class BTree {
 
                     // check if the value at the parent isnt the one we want to delete,
                     // because if it is, we need to replace the parent with the predecesor
-                    if(node.items[childPos] == delItem){
+                    if(node.items[childPos] == delItem && node.itemsInNode() == 1){
                         //copy value in parent node to deleted value in child
                         node.children[childPos].items[0] = predecesor;
                     }else{
