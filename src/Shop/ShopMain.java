@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class ShopMain {
     public static void main(String[] args) {
-        String shopfile = "data/dataset_ObjectTEST.json";
+        String shopfile = "data/dataset_ObjectS.json";
 
         ShopObjectManager sm = new ShopObjectManager(shopfile);
 
@@ -31,7 +31,6 @@ public class ShopMain {
         tree.delete(items[7]);
         tree.delete(items[5]);
         tree.delete(items[9]);
-        tree.delete(items[17]);
 
 
 
