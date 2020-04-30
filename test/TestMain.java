@@ -25,7 +25,7 @@ public class TestMain {
 
         rTree.showGraph();
 
-        /*if (!objectQueue.isEmpty()){
+        if (!objectQueue.isEmpty()){
             Scanner sc = new Scanner(System.in);
             int id;
             boolean exit = false;
@@ -58,7 +58,7 @@ public class TestMain {
         else {
             System.out.println("Sorry No objects where found!");
         }
-        System.out.printf("");*/
+        System.out.printf("");
 
        /* class Panel extends JPanel {
             RTree rTree;

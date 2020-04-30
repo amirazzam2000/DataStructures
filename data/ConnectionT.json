@@ -6,15 +6,33 @@
       0,
       1
     ],
-    "enemy_probability": 75
+    "enemy_probability": 70
   },
   {
     "id": 1,
     "connection_name": "Connection2",
     "room_connected": [
       1,
+      3
+    ],
+    "enemy_probability": 50
+  },
+  {
+    "id": 2,
+    "connection_name": "Connection3",
+    "room_connected": [
+      0,
       2
     ],
-    "enemy_probability": 30
+    "enemy_probability": 40
+  },
+  {
+    "id": 3,
+    "connection_name": "Connection4",
+    "room_connected": [
+      2,
+      3
+    ],
+    "enemy_probability": 50
   }
 ]

@@ -194,7 +194,11 @@ public class RTree {
 
                 Branch branch = (Branch) currentBranch;
                 if(branch.getChild().getChild(i) != null){
-                    sb.append(branch.getChild().getChild(i).getId());
+                    if(branch.getChild().getChild(i) instanceof MapObject)
+                        sb.append("L").append(branch.getChild().getChild(i).getId());
+                    else
+                        sb.append("B").append(branch.getChild().getChild(i).getId());
+
                     System.out.println(sb.toString());
                     if(branch.getChild().getChild(i)!= null &&
                             branch.getChild().getChild(i) instanceof Branch){
