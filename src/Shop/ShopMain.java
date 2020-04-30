@@ -34,6 +34,8 @@ public class ShopMain {
         //tree.delete(items[15]); //left double merge
         //tree.delete(items[11]); //right double merge
 
+        //tree.delete(items[2]);
+
 
         System.out.println(BTree.root);
     }

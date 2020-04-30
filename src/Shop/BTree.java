@@ -374,12 +374,15 @@ public class BTree {
                             break;
                         }else{
                             //check both sides to see which sibling has more values
-                            if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
+                            if(node.children[i-1] == null){
+                                siblingPos = i+1;
+                            }else if(node.children[i+1] == null){
+                                siblingPos = i-1;
+                            }else if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
                                 siblingPos = i+1;
                             }else{
                                 siblingPos = i-1;
                             }
-                            break;
                         }
                     }
                 }
