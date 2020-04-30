@@ -39,6 +39,8 @@ public class ShopMain {
 
         //tree.delete(items[2]);
 
+        BTree.drawTree(BTree.root, 0);
+
 
         System.out.println(BTree.root);
     }

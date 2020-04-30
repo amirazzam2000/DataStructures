@@ -587,28 +587,35 @@ public class BTree {
         }
     }
 
+    public static void drawTree(Node root, int level){
 
-    //precondition is to pass this function the correct child node of the item's node we are looking for
-    //successor removed once it is returned
+        int items = root.itemsInNode();
 
-    /*
-    private ShopObject getSucc(Node node) {
-        if(!node.isLeaf()){
-            return getSucc(node.children[0]);
+        if(root.isLeaf()){
+
+            for (int i = 0; i <= items; i++) {
+
+                if(i < items){
+                    for (int j = 0; j < level; j++) {
+                        System.out.print("\t");
+                    }
+                    System.out.println(root.items[i].getPrice());
+                }
+            }
 
         }else{
-            ShopObject succ = node.items[0];
-            node.items[0] = null;
+            for (int i = 0; i <= items; i++) {
 
-            //if the remaining node is not empty, shift the items to the right
-            if(!node.isEmpty()){
-                for (int j = 0; j < node.items.length-1; j++) {
-                    node.items[j] = node.items[j+1];
-                    node.items[j+1] = null;
+                if(i < items){
+                    for (int j = 0; j < level; j++) {
+                        System.out.print("\t");
+                    }
+                    System.out.println(root.items[i].getPrice());
                 }
+
+                drawTree(root.children[i], level + 1);
             }
         }
     }
 
-     */
 }
