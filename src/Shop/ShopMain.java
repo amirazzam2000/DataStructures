@@ -28,8 +28,13 @@ public class ShopMain {
         tree.delete(items[0]);
         tree.delete(items[7]);
         tree.delete(items[5]);
-
         tree.delete(items[9]);
+        tree.delete(items[17]);
+
+        //tree.delete(items[15]); //left double merge
+        //tree.delete(items[11]); //right double merge
+
+
         System.out.println(BTree.root);
     }
 }
