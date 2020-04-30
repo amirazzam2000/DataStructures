@@ -461,7 +461,7 @@ public class BTree {
                     if(node.items[childPos] == delItem){
 
                         //add value in parent node to the sibling
-                        if(node.itemsInNode() > 1){
+                        if(node.itemsInNode() > 1 && siblingPos < childPos){
                             addItemIntoNode(node.children[siblingPos], node.items[siblingPos]);
 
                             node.items[childPos] = predecesor;
