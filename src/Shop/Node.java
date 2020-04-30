@@ -4,13 +4,11 @@ import java.util.Arrays;
 
 //For implementing a B-tree of order MAX_ORDER
 class Node {
-    private static final int MAX_ORDER = 3;
+    public static final int MAX_ORDER = 3;
 
     public ShopObject[] items = new ShopObject[MAX_ORDER];
 
     public Node[] children = new Node[MAX_ORDER+1];
-
-    public boolean isLeaf = true;
 
     public Node(){
 
@@ -35,6 +33,28 @@ class Node {
         return items[MAX_ORDER-1] != null;
     }
 
+    public boolean isEmpty(){
+        boolean isEmpty = true;
+
+        for (int i = 0; i < this.items.length; i++) {
+            if(this.items[i] != null){
+                return false;
+            }
+        }
+        return isEmpty;
+    }
+
+    public boolean hasNoChildren(){
+        boolean hasChildren = true;
+
+        for (int i = 0; i < this.children.length; i++) {
+            if(this.children[i] != null){
+                return false;
+            }
+        }
+        return hasChildren;
+    }
+
     public void makeLeftChild(ShopObject[] items, Node[] children){
         for (int i = 0; i < items.length; i++) {
             this.items[i] = items[i];
@@ -42,7 +62,28 @@ class Node {
     }
 
     public boolean isLeaf() {
-        return this.isLeaf;
+        boolean isLeaf = true;
+
+        for (int i = 0; i < this.children.length; i++) {
+            if(this.children[i] != null){
+                return false;
+            }
+        }
+        return isLeaf;
+    }
+
+    public void addChildToNode(Node child){
+        this.children[this.itemsInNode()] = child;
+    }
+
+    public int itemsInNode(){
+
+        int num_items=0;
+
+        while (this.items[num_items] != null){
+            num_items++;
+        }
+        return num_items;
     }
 }
 
