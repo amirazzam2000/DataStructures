@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class ShopMain {
     public static void main(String[] args) {
-        String shopfile = "data/dataset_ObjectS.json";
+        String shopfile = "data/dataset_ObjectTEST.json";
 
         ShopObjectManager sm = new ShopObjectManager(shopfile);
 
@@ -19,19 +19,17 @@ public class ShopMain {
 
         Node found = (tree.search(items[7]));
 
-        tree.delete(items[7]);
-        tree.delete(items[11]);
-        tree.delete(items[10]);
-        tree.delete(items[12]);
-        tree.delete(items[5]);
+        tree.delete(items[14]);
         tree.delete(items[3]);
-        tree.delete(items[9]);
         tree.delete(items[1]);
         tree.delete(items[6]);
         tree.delete(items[8]);
         tree.delete(items[4]);
-        tree.delete(items[14]);
+        tree.delete(items[0]);
+        tree.delete(items[7]);
+        tree.delete(items[5]);
 
+        tree.delete(items[9]);
         System.out.println(BTree.root);
     }
 }
