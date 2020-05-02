@@ -1,5 +1,8 @@
 import Data.*;
 import MapObjects.*;
+import Shop.BTree;
+import Shop.ShopObject;
+import Shop.ShopObjectManager;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -35,6 +38,7 @@ public class Main {
                     rTreeMenu();
                     break;
                 case 3:
+                    bTreeMenu();
                     break;
                 case 4:
                     skip = true;
@@ -42,9 +46,6 @@ public class Main {
             }
 
         }while (!skip);
-
-
-
     }
 
     static void dijkstraMenu(){
@@ -190,6 +191,250 @@ public class Main {
                     }
                     break;
                 case 3:
+                    skip = true;
+                    break;
+            }
+
+        }while(!skip);
+    }
+
+    static void bTreeMenu(){
+        boolean skip = false;
+        boolean flag = false;
+        int option = 0;
+        int i =0;
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Loading dataset into tree...");
+        String shopfile = "data/dataset_ObjectS.json";
+
+        ShopObjectManager sm = new ShopObjectManager(shopfile);
+        ShopObject[] items = sm.getShopObjects();
+        BTree tree = new BTree();
+
+        //add all the items to the tree
+        for (int j = 0; j < items.length; j++) {
+            tree.addItem(items[j]);
+        }
+
+        System.out.println("Data loaded into the tree successfully");
+
+        do{
+            System.out.println("1. Visualize tree ");
+            System.out.println("2. See if an object is in the shop");
+            System.out.println("3. Remove an object in the shop");
+            System.out.println("4. Go back to menu.");
+
+            System.out.println("Select option : ");
+            do {
+                flag = false;
+                try {
+                    option = sc.nextInt();
+                }catch (InputMismatchException e){
+                    System.out.println("you can only select one of the " +
+                            "options above.");
+                    flag = true;
+                    sc = new Scanner(System.in);
+                }
+            }while(flag);
+
+
+            switch (option){
+                case 1:
+                    BTree.drawTree(BTree.root, 0);
+                    break;
+
+                case 2:
+                    System.out.println("Would you like to find the item by price or by name? " +
+                            "(0 for price, 1 for name)");
+
+                    int optionFind = -1;
+
+                    do {
+                        flag = false;
+                        try {
+                            optionFind = sc.nextInt();
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please insert an int");
+                            flag = true;
+                            sc = new Scanner(System.in);
+                        }
+                    }while(flag);
+
+                    switch (optionFind){
+                        case 0:
+
+                            System.out.println("Insert the price of the object to find");
+
+                            int findPrice = 0;
+
+                            do {
+                                flag = false;
+                                try {
+                                    findPrice = sc.nextInt();
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please insert an int");
+                                    flag = true;
+                                    sc = new Scanner(System.in);
+                                }
+                            }while(flag);
+
+                            //call function with the inserted value
+
+                            i=0;
+
+                            while(i < items.length){
+                                if(items[i].getPrice() == findPrice){
+                                    System.out.println("The item found has name: " + tree.search(items[i]).getName());
+                                    break;
+                                }
+                                i++;
+                            }
+
+                            if(i == items.length){
+                                System.out.println("Item was not found in the shop :(");
+                            }
+                            
+                            break;
+
+                        case 1:
+                            System.out.println("Insert the name of the object to find");
+
+                            String findName = null;
+
+                            do {
+                                flag = false;
+                                try {
+                                    sc.nextLine();
+                                    findName = sc.nextLine();
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please insert a String");
+                                    flag = true;
+                                    sc = new Scanner(System.in);
+                                }
+                            }while(flag);
+
+                            //call function with the inserted value
+
+                            i=0;
+
+                            while(i < items.length){
+                                if(items[i].getName().equals(findName)){
+                                    System.out.println("The item found has price: " + tree.search(items[i]).getPrice());
+                                    tree.search(items[i]);
+                                    break;
+                                }
+                                i++;
+                            }
+
+                            if(i == items.length){
+                                System.out.println("Item was not found in the shop :(");
+                            }
+
+                            break;
+
+                        default:
+                            System.out.println("0 or 1 only!");
+                            break;
+                    }
+
+                    break;
+
+                case 3:
+                    System.out.println("Would you like to delete the item by price or by name? " +
+                            "(0 for price, 1 for name)");
+
+                    int optionDelete = -1;
+
+                    do {
+                        try {
+                            optionDelete = sc.nextInt();
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please insert an int");
+                            flag = true;
+                            sc = new Scanner(System.in);
+                        }
+                    }while(flag);
+
+                    switch (optionDelete){
+                        case 0:
+
+                            System.out.println("Insert the price of the object to delete");
+
+                            int deletePrice = 0;
+
+                            do {
+                                flag = false;
+                                try {
+                                    deletePrice = sc.nextInt();
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please insert an int");
+                                    flag = true;
+                                    sc = new Scanner(System.in);
+                                }
+                            }while(flag);
+
+                            //call function with the inserted value
+                            i=0;
+
+                            while(i < items.length){
+                                if(items[i].getPrice() == deletePrice){
+                                    tree.delete(items[i]);
+                                    System.out.println("Item deleted");
+                                    break;
+                                }
+                                i++;
+                            }
+
+                            if(i == items.length){
+                                System.out.println("Item was not found in the shop :(");
+                            }
+
+                            break;
+
+                        case 1:
+                            System.out.println("Insert the name of the object to delete");
+
+                            String deleteName = null;
+
+                            do {
+                                flag = false;
+                                try {
+                                    sc.nextLine();
+                                    deleteName = sc.nextLine();
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please insert a String");
+                                    flag = true;
+                                    sc = new Scanner(System.in);
+                                }
+                            }while(flag);
+
+                            //call function with the inserted value
+                            i=0;
+
+                            while(i < items.length){
+                                if(items[i].getName().equals(deleteName)){
+                                    tree.delete(items[i]);
+                                    System.out.println("Item deleted");
+                                    break;
+                                }
+                                i++;
+                            }
+
+                            if(i == items.length){
+                                System.out.println("Item was not found in the shop :(");
+                            }
+
+                            break;
+
+                        default:
+                            System.out.println("0 or 1 only!");
+                            break;
+                    }
+                    break;
+
+                case 4:
                     skip = true;
                     break;
             }
