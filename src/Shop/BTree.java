@@ -117,20 +117,18 @@ public class BTree {
         }
     }
 
-    public Node search(ShopObject item){
+    public ShopObject search(ShopObject item){
         return traverse(item, root);
     }
 
-    //returns node
-
-    private Node traverse(ShopObject item, Node node){
+    private ShopObject traverse(ShopObject item, Node node){
 
         int childPos = 0;
 
         for (int i = 0; i < node.items.length; i++) {
             if(node.items[i] == item){
 
-                return node;
+                return item;
             }else if(node.items[i] != null && node.items[i].getPrice() < item.getPrice()){
                 childPos = i+1;
             }
