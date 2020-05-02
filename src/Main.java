@@ -46,9 +46,6 @@ public class Main {
             }
 
         }while (!skip);
-
-
-
     }
 
     static void dijkstraMenu(){
@@ -309,6 +306,7 @@ public class Main {
                             do {
                                 flag = false;
                                 try {
+                                    sc.nextLine();
                                     findName = sc.nextLine();
                                 } catch (InputMismatchException e) {
                                     System.out.println("Please insert a String");
@@ -353,7 +351,7 @@ public class Main {
                         try {
                             optionDelete = sc.nextInt();
                         } catch (InputMismatchException e) {
-                            System.out.println("Please insert a String");
+                            System.out.println("Please insert an int");
                             flag = true;
                             sc = new Scanner(System.in);
                         }
@@ -403,6 +401,7 @@ public class Main {
                             do {
                                 flag = false;
                                 try {
+                                    sc.nextLine();
                                     deleteName = sc.nextLine();
                                 } catch (InputMismatchException e) {
                                     System.out.println("Please insert a String");
@@ -438,11 +437,8 @@ public class Main {
                 case 4:
                     skip = true;
                     break;
-
             }
 
         }while(!skip);
-
     }
-
 }
