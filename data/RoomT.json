@@ -10,5 +10,9 @@
   {
     "id": 2,
     "room_name": "room3"
+  },
+  {
+    "id": 3,
+    "room_name": "room4"
   }
 ]
