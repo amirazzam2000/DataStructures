@@ -555,7 +555,7 @@ public class BTree {
     }
 
 
-    //TODO move to node
+    //TODO move to node class
     private int addItemIntoNode(Node node, ShopObject item){
 
         //if no item there
@@ -593,15 +593,24 @@ public class BTree {
 
         if(root.isLeaf()){
 
+            for (int j = 0; j < level; j++) {
+                System.out.print("\t");
+            }
+            System.out.println("------");
+
             for (int i = 0; i <= items; i++) {
 
                 if(i < items){
                     for (int j = 0; j < level; j++) {
                         System.out.print("\t");
                     }
-                    System.out.println(root.items[i].getPrice());
+                    System.out.println("|L" + root.items[i].getPrice() + "|");
                 }
             }
+            for (int j = 0; j < level; j++) {
+                System.out.print("\t");
+            }
+            System.out.println("------");
 
         }else{
             for (int i = 0; i <= items; i++) {
@@ -610,7 +619,7 @@ public class BTree {
                     for (int j = 0; j < level; j++) {
                         System.out.print("\t");
                     }
-                    System.out.println(root.items[i].getPrice());
+                    System.out.println("B" + root.items[i].getPrice());
                 }
 
                 drawTree(root.children[i], level + 1);

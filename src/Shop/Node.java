@@ -14,9 +14,7 @@ class Node {
 
         Arrays.fill(children, null);
 
-        for (int i = 0; i < MAX_ORDER-1; i++) {
-            items[i] = null;
-        }
+        Arrays.fill(items, null);
     }
 
     public Node(ShopObject item){
@@ -53,12 +51,6 @@ class Node {
             }
         }
         return hasChildren;
-    }
-
-    public void makeLeftChild(ShopObject[] items, Node[] children){
-        for (int i = 0; i < items.length; i++) {
-            this.items[i] = items[i];
-        }
     }
 
     public boolean isLeaf() {
