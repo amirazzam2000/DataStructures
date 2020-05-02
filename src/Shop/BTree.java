@@ -340,19 +340,17 @@ public class BTree {
     //predecesor is removed once returned, and the tree is fixed on the "way up"
 
     private ShopObject getPredecesorAndDelete(Node node, int childPos, ShopObject delItem){
-        int pred =0;
 
         if(node.isLeaf()){
 
-            pred = node.itemsInNode()-1;
+            int pred = node.itemsInNode()-1;
 
             ShopObject predecesor = node.items[pred];
             deleteItemFromLeaf(node, pred);
             return predecesor;
 
         }else{
-            pred = node.itemsInNode();
-
+            int pred = node.children[childPos].itemsInNode();
             ShopObject predecesor = getPredecesorAndDelete(node.children[childPos], pred, delItem);
 
             //check if we need to merge/redistribute
