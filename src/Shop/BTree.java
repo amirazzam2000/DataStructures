@@ -201,7 +201,11 @@ public class BTree {
                             break;
                         }else{
                             //check both sides to see which sibling has more values
-                            if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
+                            if(node.children[i-1] == null){
+                                siblingPos = i+1;
+                            }else if(node.children[i+1] == null){
+                                siblingPos = i-1;
+                            }else if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
                                 siblingPos = i+1;
                             }else{
                                 siblingPos = i-1;
@@ -214,12 +218,13 @@ public class BTree {
                 //if sibling has 2 or more items, redistribute
                 if(node.children[siblingPos].itemsInNode() >= 2){
 
-                    //copy value in parent node to deleted value in child
-                    node.children[childPos].items[0] = node.items[childPos-1];
-
                     //get the position from where we should get the item from the sibling
                     //we use it to place the item in the parent node
                     if(childPos !=0){
+
+                        //copy value in parent node to deleted value in child
+                        node.children[childPos].items[0] = node.items[childPos-1];
+
                         //get value from sibling into parent
                         //check what sibling pos is and get sibling based on that
                         if(childPos > siblingPos) {
@@ -232,6 +237,9 @@ public class BTree {
                             deleteItemFromLeaf(node.children[siblingPos], 0);
                         }
                     }else{
+                        //copy value in parent node to deleted value in child
+                        node.children[childPos].items[0] = node.items[childPos];
+
                         //get value from sibling into parent
                         //since the child is 0 (checked before), we can assume we need to get the first item in the sibling
                         node.items[childPos] = node.children[siblingPos].items[0];
@@ -264,6 +272,7 @@ public class BTree {
                             //then shift all the children in the sibling 1 pos to the left, overwriting the child we just stole
                             for (int i = 0; i < node.children[siblingPos].children.length-2; i++) {
                                 node.children[siblingPos].children[i] = node.children[siblingPos].children[i+1];
+                                node.children[siblingPos].children[i+1] = null;
                             }
                         }
                     }
@@ -365,12 +374,15 @@ public class BTree {
                             break;
                         }else{
                             //check both sides to see which sibling has more values
-                            if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
+                            if(node.children[i-1] == null){
+                                siblingPos = i+1;
+                            }else if(node.children[i+1] == null){
+                                siblingPos = i-1;
+                            }else if(node.children[i-1].itemsInNode() < node.children[i+1].itemsInNode()){
                                 siblingPos = i+1;
                             }else{
                                 siblingPos = i-1;
                             }
-                            break;
                         }
                     }
                 }
@@ -381,11 +393,9 @@ public class BTree {
                     // check if the value at the parent isnt the one we want to delete,
                     // because if it is, we need to replace the parent with the predecesor
 
-                    ///TODO CHECK CUS I CHANGED THIS AND IT MAKES SENSE BUT WE HAVE TO DELETE THE TREE FROM 0 again to see it work
-
-                    if(node.items[childPos] == delItem){
+                    if(node.items[childPos] == delItem && siblingPos-1 == childPos){
                         //copy value in parent node to deleted value in child
-                        node.children[childPos].items[childPos] = predecesor;
+                        node.children[childPos].items[0] = predecesor;
                     }else{
                         //copy value in parent node to deleted value in child
                         node.children[childPos].items[0] = node.items[childPos-1];
@@ -438,6 +448,7 @@ public class BTree {
                             //then shift all the children in the sibling 1 pos to the left, overwriting the child we just stole
                             for (int i = 0; i < node.children[siblingPos].children.length-2; i++) {
                                 node.children[siblingPos].children[i] = node.children[siblingPos].children[i+1];
+                                node.children[siblingPos].children[i+1] = null;
                             }
                         }
                     }
@@ -445,21 +456,31 @@ public class BTree {
 
                 }else{
                     //else, merge
-
                     // check if the value at the parent isnt the one we want to delete,
                     // because if it is, we need to add value in parent to the sibling
                     if(node.items[childPos] == delItem){
+
                         //add value in parent node to the sibling
-                        addItemIntoNode(node.children[siblingPos], predecesor);
+                        if(node.itemsInNode() > 1 && siblingPos < childPos){
+                            addItemIntoNode(node.children[siblingPos], node.items[siblingPos]);
 
-                        //dont just set the item to null, but shift the others to the left
-                        //node.items[childPos] = null;
+                            node.items[childPos] = predecesor;
 
+                            //dont just set the item to null, but shift the others to the left
+                            //node.items[childPos] = null;
+                            for (int j = siblingPos; j < node.items.length-1; j++) {
+                                node.items[j] = node.items[j+1];
+                                node.items[j+1] = null;
+                            }
+                        }else{
 
-                        //TODO: works but idk if needed
-                        for (int j = childPos; j < node.items.length-1; j++) {
-                            node.items[j] = node.items[j+1];
-                            node.items[j+1] = null;
+                            //dont just set the item to null, but shift the others to the left
+                            //node.items[childPos] = null;
+                            addItemIntoNode(node.children[siblingPos], predecesor);
+                            for (int j = childPos; j < node.items.length-1; j++) {
+                                node.items[j] = node.items[j+1];
+                                node.items[j+1] = null;
+                            }
                         }
 
                     }else{
@@ -566,28 +587,35 @@ public class BTree {
         }
     }
 
+    public static void drawTree(Node root, int level){
 
-    //precondition is to pass this function the correct child node of the item's node we are looking for
-    //successor removed once it is returned
+        int items = root.itemsInNode();
 
-    /*
-    private ShopObject getSucc(Node node) {
-        if(!node.isLeaf()){
-            return getSucc(node.children[0]);
+        if(root.isLeaf()){
+
+            for (int i = 0; i <= items; i++) {
+
+                if(i < items){
+                    for (int j = 0; j < level; j++) {
+                        System.out.print("\t");
+                    }
+                    System.out.println(root.items[i].getPrice());
+                }
+            }
 
         }else{
-            ShopObject succ = node.items[0];
-            node.items[0] = null;
+            for (int i = 0; i <= items; i++) {
 
-            //if the remaining node is not empty, shift the items to the right
-            if(!node.isEmpty()){
-                for (int j = 0; j < node.items.length-1; j++) {
-                    node.items[j] = node.items[j+1];
-                    node.items[j+1] = null;
+                if(i < items){
+                    for (int j = 0; j < level; j++) {
+                        System.out.print("\t");
+                    }
+                    System.out.println(root.items[i].getPrice());
                 }
+
+                drawTree(root.children[i], level + 1);
             }
         }
     }
 
-     */
 }
