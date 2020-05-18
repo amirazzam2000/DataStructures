@@ -38,6 +38,21 @@ You can select option 1 to visualize the data set. The format of which is the fo
 In option 2 you will be able to introduce your current location,  and the program will return the ids of all the map objects you collide with. Then it will offer you the option to pick the item up by selecting its id. Additionally, the item will be deleted it if you pick it up.
 
 
-<B> to Run the BTree </B>
+<B> to Run the BTree of max order 3 (2-3 tree) </B>
 
+When you select option 3 from the main menu, it will reload all the items from the dataset into the tree. (keep this in mind when leaving the BTree menu).
 
+Another menu will pop up
+
+<i>
+1. Visualize tree 
+2. See if an object is in the shop
+3. Remove an object in the shop
+4. Go back to menu.
+</i>
+
+Here, you can visualize the tree and search/delete shop objects from it.
+
+When choosing either the search or the delete options, you will be promted to enter if you want to search/delete the item by its name or by its price, and then the result will show (wether the item was deleted/found).
+
+To verify the result, one can re-select the visualize option to see the changes.
