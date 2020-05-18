@@ -126,7 +126,7 @@ public class Main {
 
         do{
             System.out.println("1. visualise data set.");
-            System.out.println("2. see grounding objects and pick them up. " +
+            System.out.println("2. see surrounding objects and pick them up. " +
                     "(the element will be delete from the tree)");
             System.out.println("3. go back to menu.");
             System.out.println("select option : ");
