@@ -10,5 +10,15 @@ public class HashItem {
     @SerializedName("Games")
     private int games;
 
+    public String getName() {
+        return name;
+    }
 
+    public int getKda() {
+        return kda;
+    }
+
+    public int getGames() {
+        return games;
+    }
 }
