@@ -41,10 +41,13 @@ public class List<T> {
     }
 
 
-    public int getSize() {
+    private int getSize() {
         return object.length;
     }
 
+    public  int size(){
+        return pos;
+    }
 
 
 

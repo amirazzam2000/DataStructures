@@ -1,4 +1,8 @@
 import Data.*;
+import Hash.HashItem;
+import Hash.HashItemManager;
+import Hash.HashMapFriends;
+import Hash.List;
 import MapObjects.*;
 import Shop.BTree;
 import Shop.ShopObject;
@@ -17,7 +21,8 @@ public class Main {
             System.out.println("1. dijkstra menu");
             System.out.println("2. RTree menu");
             System.out.println("3. BTree menu");
-            System.out.println("4. exit.");
+            System.out.println("4. Hash Players");
+            System.out.println("5. exit.");
             do {
                 flag = false;
                 try {
@@ -41,6 +46,9 @@ public class Main {
                     bTreeMenu();
                     break;
                 case 4:
+                    hashMenu();
+                    break;
+                case 5:
                     skip = true;
                     break;
             }
@@ -441,4 +449,118 @@ public class Main {
 
         }while(!skip);
     }
+    
+    
+    static void hashMenu(){
+        HashItemManager hashItemManager = null;
+        Scanner sc = new Scanner(System.in);
+        boolean flag = false;
+        boolean skip = false;
+        String name;
+        long t1 , t2;
+        int option = 0;
+        System.out.print("select file size: ");
+        do {
+            String input = sc.next();
+            skip = true;
+            switch (input) {
+                case "S":
+                case "s":
+                    hashItemManager = new HashItemManager("S");
+                    System.out.println("loading the small files...");
+                    break;
+                case "L":
+                case "l":
+                    hashItemManager = new HashItemManager("L");
+                    System.out.println("loading the large files...");
+                    break;
+                case "M":
+                case "m":
+                    hashItemManager = new HashItemManager("M");
+                    System.out.println("loading the medium files...");
+                    break;
+
+                default:
+                    skip = false ;
+                    System.out.println("pick S, L, or M only !");
+                    break;
+            }
+        }while(!skip);
+
+        skip = false;
+        t1 = System.nanoTime();
+        HashMapFriends hashMapFriends = new HashMapFriends(hashItemManager);
+        t2 = System.nanoTime();
+        System.out.println("Time taken to load the file: " + (t2 -t1)/Math.pow(10,9) + " seconds" + System.lineSeparator());
+
+
+
+        do{
+            System.out.println("1. Search for a Player");
+            System.out.println("2. Delete a Player");
+            System.out.println("3. Print HashMap");
+            System.out.println("4. Back");
+            System.out.println("select option : ");
+
+            do {
+                flag = false;
+                try {
+                    option = sc.nextInt();
+                }catch (InputMismatchException e){
+                    System.out.println("you can only select one of the " +
+                            "options above.");
+                    flag = true;
+                    sc = new Scanner(System.in);
+                }
+            }while(flag);
+
+
+            switch (option){
+                case 1:
+                    System.out.println("enter username : ");
+                    sc = new Scanner(System.in);
+                    name = sc.nextLine();
+                    t1 = System.nanoTime();
+                    HashItem item = hashMapFriends.find(name);
+                    t2 = System.nanoTime();
+                    if (item == null){
+                        System.out.println("user not found!");
+                    }
+                    else {
+                        System.out.println(item.getName()+ " , " +
+                                item.getKda()+ " , " +
+                                item.getGames());
+                    }
+                    System.out.println("Time taken to search: " + (t2 -t1)/Math.pow(10,9) + " seconds" + System.lineSeparator());
+
+                    break;
+                case 2:
+                    System.out.println("enter username : ");
+                    sc = new Scanner(System.in);
+                    name = sc.nextLine();
+                    t1 = System.nanoTime();
+                    boolean deleted = hashMapFriends.delete(name);
+                    t2 = System.nanoTime();
+                    if (!deleted){
+                        System.out.println("user not found!");
+                    }
+                    else {
+                        System.out.println("user deleted successfuly!");
+                    }
+                    System.out.println("Time taken to search: " + (t2 -t1)/Math.pow(10,9) + " seconds" + System.lineSeparator());
+
+                    break;
+                case 3:
+                    hashMapFriends.print();
+                    System.out.println();
+                    break;
+                case 4:
+                    skip = true;
+                    break;
+            }
+
+        }while(!skip);
+
+    }
+
 }

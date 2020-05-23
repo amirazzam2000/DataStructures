@@ -7,6 +7,7 @@ to run the files you only have to press the run button. a menu like this will sh
 1. dijkstra menu
 2. RTree menu
 3. BTree menu
+4. Hash Players
 4. exit.
 </i>
 
@@ -56,3 +57,40 @@ Here, you can visualize the tree and search/delete shop objects from it.
 When choosing either the search or the delete options, you will be promted to enter if you want to search/delete the item by its name or by its price, and then the result will show (wether the item was deleted/found).
 
 To verify the result, one can re-select the visualize option to see the changes.
+
+<B> to Run the hashMap </B>
+
+first you will have to select the file size :
+To do so, just
+ type : 'S' (small), 'M' (medium), or 'L' (large)
+ 
+ then after the data is loaded you will be able to see what is the maximum
+  element count in the buckets of the hashMap.
+  
+  then you will see a menu like this: 
+  
+  
+<i>
+
+1. Search for a Player
+2. Delete a Player
+3. Print HashMap
+4. Back
+</i>
+
+if you select option 1, it will ask you to enter the username, then it will
+ search the hashMap for that name (as we use the name as the key of the map)
+
+then if you select option 2, it will ask you as well to enter the username, then it will
+search the hashMap for that name (as we use the name as the key of the map
+) and delete it if found. 
+
+then you can select option 3 to print the content of the map, the content
+ will be displayed in this format:
+ 
+(number of the hashMap bucket) : (the elements in that bucket)
+
+Finally, you can select option 4 to go back to the menu.
+
+Note: that none of the information is saved after you exit the Hash players
+ option, as every time you enter this option again the information is reloaded.
