@@ -1,12 +1,12 @@
 # Data Structures
 
 Developed by:
-
-Amir Azzam
-Arcadia Youlten
-Felipe Perez
-Sonia Leal
-
+<i>
+- Amir Azzam
+- Arcadia Youlten
+- Felipe Perez
+- Sonia Leal
+</i>
 
 We used JAVA SDK 13
 
