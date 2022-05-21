@@ -1,4 +1,12 @@
-# P4_amir.azzam_sonia.leal_felipe.perez_arcadia.youlten
+# Data Structures
+
+Developed by:
+
+Amir Azzam
+Arcadia Youlten
+Felipe Perez
+Sonia Leal
+
 
 We used JAVA SDK 13
 
